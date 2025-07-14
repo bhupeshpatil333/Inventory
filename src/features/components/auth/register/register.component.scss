@@ -1,0 +1,32 @@
+.register-container {
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 12px;
+
+  h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 24px;
+  }
+
+  .full-width {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 12px;
+    font-weight: bold;
+    background-color: #143b68;
+    color: white;
+  }
+
+  .switch-link {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 14px;
+  }
+}
