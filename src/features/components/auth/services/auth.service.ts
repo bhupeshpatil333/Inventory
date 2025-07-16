@@ -17,9 +17,9 @@ export class AuthService {
   // auth2 = inject(AngularFireAuth);
   currentUser$ = new BehaviorSubject<any | null>(null);
   constructor(private auth: Auth, private firestore: Firestore, private router: Router,) {
-    onAuthStateChanged(this.auth, (user) => {
-      this.currentUser$.next(user);
-    });
+    // onAuthStateChanged(this.auth, (user) => {
+    //   this.currentUser$.next(user);
+    // });
   }
 
   // async register(email: string, password: string) {
@@ -37,12 +37,12 @@ export class AuthService {
   // }
 
   register(email: string, password: string) {
-    this.currentUser$.next(this.auth.currentUser);
+    // this.currentUser$.next(this.auth.currentUser);
     return createUserWithEmailAndPassword(this.auth, email, password);
   }
 
   login(email: string, password: string) {
-    this.currentUser$.next(this.auth.currentUser);
+    // this.currentUser$.next(this.auth.currentUser);
     return signInWithEmailAndPassword(this.auth, email, password);
   }
 

@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { MaterialModule } from '../../../shared/shared.module';
 import { AuthService } from '../../../features/components/auth/services/auth.service';
 import { UserCredential } from 'firebase/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,6 +13,7 @@ import { UserCredential } from 'firebase/auth';
 export class DashboardComponent implements OnInit {
   email: any;
   authService = inject(AuthService);
+  router = inject(Router);
 
   constructor() {
   }
@@ -24,6 +26,9 @@ export class DashboardComponent implements OnInit {
     })
   }
 
+  goToLogin() {
+    this.router.navigate(['/login'])
+  }
 
   logout() {
     this.authService.logout();
