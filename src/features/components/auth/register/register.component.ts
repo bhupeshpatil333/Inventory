@@ -16,13 +16,13 @@ import { AuthService } from '../services/auth.service';
 export class RegisterComponent {
   registerForm!: FormGroup;
   hide = true;
-  authService = inject(AuthService)
-  auth = inject(Auth);
   // db = inject(Database);
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    private auth: Auth,
   ) {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
