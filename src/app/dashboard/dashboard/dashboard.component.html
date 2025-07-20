@@ -53,70 +53,12 @@
 </mat-sidenav-container> -->
 
 <mat-sidenav-container class="main-container">
-  <mat-sidenav #sidenav mode="side" opened class="sidenav">
-    <div class="logo">
-      <img src="assets/logo.png" alt="Logo" />
-    </div>
-
-    <mat-nav-list>
-      <a
-        mat-list-item
-        routerLink="/dashboard"
-        routerLinkActive="active-link"
-        [routerLinkActiveOptions]="{ exact: true }"
-      >
-        <mat-icon class="color-white">dashboard</mat-icon>
-        <span class="color-white">Dashboard</span>
-      </a>
-
-      <a
-        mat-list-item
-        routerLink="/dashboard/district"
-        routerLinkActive="active-link"
-      >
-        <mat-icon class="color-white">account_tree</mat-icon>
-        <span class="color-white">Districts</span>
-      </a>
-
-      <a mat-list-item routerLink="/school" routerLinkActive="active-link">
-        <mat-icon class="color-white">school</mat-icon>
-        <span class="color-white">Schools</span>
-      </a>
-
-      <a mat-list-item routerLink="/events" routerLinkActive="active-link">
-        <mat-icon class="color-white">event</mat-icon>
-        <span class="color-white">Events</span>
-      </a>
-
-      <a mat-list-item routerLink="/albums" routerLinkActive="active-link">
-        <mat-icon class="color-white">folder</mat-icon>
-        <span class="color-white">Albums</span>
-      </a>
-
-      <a mat-list-item routerLink="/admin" routerLinkActive="active-link">
-        <mat-icon class="color-white">admin_panel_settings</mat-icon>
-        <span class="color-white">Admin Panel</span>
-      </a>
-
-      <a mat-list-item routerLink="/settings" routerLinkActive="active-link">
-        <mat-icon class="color-white">settings</mat-icon>
-        <span class="color-white">Settings</span>
-      </a>
-
-      <a mat-list-item (click)="logout()" routerLinkActive="active-link">
-        <mat-icon class="color-white">logout</mat-icon>
-        <span class="color-white">Logout</span>
-      </a>
-    </mat-nav-list>
+  <mat-sidenav #sidenav mode="side" opened class="sidenav" autosize>
+    <app-sidebar></app-sidebar>
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <mat-toolbar color="primary" class="toolbar">
-      <span> Admin Panel</span>
-      <span class="spacer"></span>
-      <mat-icon>notifications</mat-icon>
-      <span class="user-info">user test</span>
-    </mat-toolbar>
+    <app-header></app-header>
 
     <div class="content">
       <router-outlet></router-outlet>

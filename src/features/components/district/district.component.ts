@@ -19,15 +19,33 @@ export class DistrictComponent {
   displayedColumns = ['district', 'adminName', 'phone', 'email', 'actions'];
   dataSource: District[] = [];
   searchText: string = '';
+  loading = false;
 
   constructor(private districtService: DistrictService, private fb: FormBuilder, private router: Router, private dialog: MatDialog) {
 
   }
 
   ngOnInit(): void {
-    this.districtService.getDistricts().subscribe((data) => {
-      this.dataSource = data;
-    });
+    // this.districtService.getDistricts().subscribe((data) => {
+    //   this.dataSource = data;
+    // });
+    this.loading = true;
+    this.districtService.districtSub$.subscribe(data => {
+      console.log('data: ', data);
+      if (data === null) {
+        this.loading = true; // Still loading
+      } else {
+        this.dataSource = data;
+        this.loading = false;
+      }
+
+    })
+    this.loading = true;
+    this.districtService.getDistrictData().then((data) => {
+      if (data) {
+        this.loading = false;
+      }
+    })
   }
 
   delete(id: string) {
@@ -43,6 +61,7 @@ export class DistrictComponent {
   }
 
   edit(id: string) {
+    console.log('id: ', id);
     this.router.navigate(['/dashboard/district/edit', id]);
   }
 

@@ -59,7 +59,7 @@
   </table>
 </div> -->
 
-<div class="p-4">
+<div class="">
   <div class="flex justify-between items-center mb-4">
     <mat-form-field appearance="outline">
       <mat-label>Search</mat-label>
@@ -70,7 +70,19 @@
     </button>
   </div>
 
-  <table mat-table [dataSource]="filteredData" class="mat-elevation-z8 w-full">
+  <!-- Spinner shown while loading -->
+  <div class="d-flex justify-content-center py-10 mb-5" *ngIf="loading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+
+  <!-- No Data Found Message -->
+  <div class="text-center text-gray-500 py-6" *ngIf="!loading && filteredData.length === 0">
+    <b>No District Data Found</b>
+  </div>
+
+  <table *ngIf="!loading && filteredData.length > 0" mat-table [dataSource]="filteredData"
+    class="mat-elevation-z8 w-full">
     <ng-container matColumnDef="district">
       <th mat-header-cell *matHeaderCellDef>District</th>
       <td mat-cell *matCellDef="let d">{{ d.district }}</td>
@@ -94,10 +106,10 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let d">
-        <button mat-icon-button color="primary" (click)="edit(d.id)">
+        <button mat-icon-button color="primary" (click)="edit(d.key)">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-icon-button color="warn" (click)="delete(d.id)">
+        <button mat-icon-button color="warn" (click)="delete(d.key)">
           <mat-icon>delete</mat-icon>
         </button>
       </td>

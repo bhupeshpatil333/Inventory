@@ -1,0 +1,12 @@
+.toolbar {
+    background-color: rgb(79, 84, 180);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

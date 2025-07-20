@@ -8,12 +8,14 @@ export const routes: Routes = [
     {
         path: 'login',
         loadChildren: () => import('../features/components/auth/auth.routes').then(m => m.authRoutes),
+        title: 'Login'
     },
 
     {
         path: 'dashboard',
         component: DashboardComponent,
         canActivate: [authGuard],
+        title: 'Dashboard',
         children: [
             {
                 path: 'district',

@@ -3,20 +3,25 @@ import { MaterialModule } from '../../../shared/shared.module';
 import { AuthService } from '../../../features/components/auth/services/auth.service';
 import { UserCredential } from 'firebase/auth';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterModule, RouterOutlet, TitleStrategy } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../../shared/confirmDialog/confirmation-dialog/confirmation-dialog.component';
+import { Location } from '@angular/common';
+import { filter } from 'rxjs';
+import { HeaderComponent } from "../../../features/components/layout/header/header.component";
+import { SidebarComponent } from "../../../features/components/layout/sidebar/sidebar.component";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [MaterialModule, RouterLink, RouterOutlet, CommonModule, FormsModule, RouterLink, RouterModule],
+  imports: [MaterialModule, RouterOutlet, CommonModule, FormsModule, RouterModule, HeaderComponent, SidebarComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
   email: any;
+  titlePage: any
   authService = inject(AuthService);
   router = inject(Router);
 
@@ -24,7 +29,7 @@ export class DashboardComponent implements OnInit {
 
   isSmallScreen = false;
 
-  constructor(private breakpointObserver: BreakpointObserver, private dialog: MatDialog) {
+  constructor(private breakpointObserver: BreakpointObserver, private dialog: MatDialog, private location: Location, private titleStrategy: TitleStrategy) {
 
   }
 
@@ -35,6 +40,7 @@ export class DashboardComponent implements OnInit {
     alert('Logout clicked!');
     // TODO: add logout logic here
   }
+
 
   logout() {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {

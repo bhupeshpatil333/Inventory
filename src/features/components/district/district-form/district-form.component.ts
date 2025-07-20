@@ -15,6 +15,7 @@ export class DistrictFormComponent {
 
   form!: FormGroup;
   id: string | null = null;
+  loading = true;
 
   constructor(
     private fb: FormBuilder,
@@ -28,12 +29,28 @@ export class DistrictFormComponent {
       district: ['', Validators.required],
       adminName: ['', Validators.required],
       phone: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
     });
 
     this.id = this.route.snapshot.paramMap.get('id');
+    // if (this.id) {
+    //   this.districtService.getDistrictById(this.id).subscribe(data => this.form.patchValue(data));
+    // }
     if (this.id) {
-      this.districtService.getDistrictById(this.id).subscribe(data => this.form.patchValue(data));
+      // Load once via Promise
+      this.districtService.getDistrictById(this.id);
+      // Subscribe to BehaviorSubject updates
+      this.districtService.districtSubById$.subscribe((data) => {
+        if (data) {
+          this.form.patchValue(data);
+          this.loading = false;
+        }
+        else {
+          this.loading = false;
+        }
+      });
+
     }
   }
 
