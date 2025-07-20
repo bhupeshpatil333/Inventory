@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { District } from './district.interface';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DistrictService } from '../../../shared/district.service';
@@ -12,7 +12,8 @@ import { DeleteConfirmationDialogComponent } from '../../../shared/confirmDialog
   selector: 'app-district',
   imports: [MaterialModule, ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './district.component.html',
-  styleUrl: './district.component.scss'
+  styleUrl: './district.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class DistrictComponent {
 
@@ -29,16 +30,9 @@ export class DistrictComponent {
     // this.districtService.getDistricts().subscribe((data) => {
     //   this.dataSource = data;
     // });
-    this.loading = true;
     this.districtService.districtSub$.subscribe(data => {
       console.log('data: ', data);
-      if (data === null) {
-        this.loading = true; // Still loading
-      } else {
-        this.dataSource = data;
-        this.loading = false;
-      }
-
+      this.dataSource = data;
     })
     this.loading = true;
     this.districtService.getDistrictData().then((data) => {
