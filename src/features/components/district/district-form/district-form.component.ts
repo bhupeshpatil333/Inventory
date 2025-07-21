@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Router, ActivatedRoute } from '@angular/router';
 import { DistrictService } from '../../../../shared/district.service';
 import { MaterialModule } from '../../../../shared/shared.module';
+import { DirtyCheckService } from '../../../../shared/services/dirty-check.service';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-district-form',
@@ -21,16 +23,18 @@ export class DistrictFormComponent {
     private fb: FormBuilder,
     private districtService: DistrictService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dirtyCheck: DirtyCheckService,
+    private toast: ToastService
   ) { }
 
   ngOnInit() {
     this.form = this.fb.group({
-      district: ['', Validators.required],
-      adminName: ['', Validators.required],
-      phone: ['', Validators.required],
+      district: ['', [Validators.required, Validators.pattern(/\S+/)]],
+      adminName: ['', [Validators.required, Validators.pattern(/\S+/)]],
+      phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: ['', [Validators.required, Validators.pattern(/\S+/)]],
     });
 
     this.id = this.route.snapshot.paramMap.get('id');
@@ -52,16 +56,29 @@ export class DistrictFormComponent {
       });
 
     }
+
+    this.form.valueChanges.subscribe(() => {
+      this.dirtyCheck.isDirty = this.form.dirty;
+    });
   }
 
-  submit() {
+  async submit() {
     if (this.form.invalid) return;
 
-    if (this.id) {
-      this.districtService.updateDistrict(this.id, this.form.value).then(() => this.router.navigate(['dashboard/district']));
-    } else {
-      this.districtService.addDistrict(this.form.value).then(() => this.router.navigate(['dashboard/district']));
+    try {
+      if (this.id) {
+        await this.districtService.updateDistrict(this.id, this.form.value);
+        this.toast.show('Updated Successfully.', 'success');
+        this.router.navigate(['dashboard/district']);
+      } else {
+        await this.districtService.addDistrict(this.form.value);
+        this.toast.show('Saved successfully!', 'success');
+        this.router.navigate(['dashboard/district']);
+      }
+    } catch (error) {
+      this.toast.show('Something went wrong!', 'error');
     }
   }
+
 
 }

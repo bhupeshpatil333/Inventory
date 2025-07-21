@@ -2,25 +2,40 @@
   <mat-form-field appearance="outline" class="w-full">
     <mat-label>District</mat-label>
     <input matInput formControlName="district" />
+    <mat-error *ngIf="form.get('district')?.hasError('required')">District is required</mat-error>
+    <mat-error *ngIf="form.get('district')?.hasError('pattern')">Invalid district name</mat-error>
+
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="w-full">
     <mat-label>Admin Name</mat-label>
     <input matInput formControlName="adminName" />
+    <mat-error *ngIf="form.get('adminName')?.hasError('required')">Admin Name is required</mat-error>
+    <mat-error *ngIf="form.get('adminName')?.hasError('pattern')">Invalid admin name</mat-error>
+
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="w-full">
     <mat-label>Mobile Phone</mat-label>
     <input matInput formControlName="phone" />
+    <mat-error *ngIf="form.get('phone')?.hasError('required')">Phone number is required</mat-error>
+    <mat-error *ngIf="form.get('phone')?.hasError('pattern')">Enter valid 10-digit number</mat-error>
+
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="w-full">
     <mat-label>Email</mat-label>
     <input matInput formControlName="email" />
+    <mat-error *ngIf="form.get('email')?.hasError('required')">Email is required</mat-error>
+    <mat-error *ngIf="form.get('email')?.hasError('email')">Invalid email address</mat-error>
+
   </mat-form-field>
   <mat-form-field appearance="outline" class="w-full">
     <mat-label>Password</mat-label>
     <input matInput formControlName="password" />
+    <mat-error *ngIf="form.get('password')?.hasError('required')">Password is required</mat-error>
+    <mat-error *ngIf="form.get('password')?.hasError('pattern')">Invalid password</mat-error>
+
   </mat-form-field>
 
   <button mat-flat-button color="primary" type="submit">Save</button>

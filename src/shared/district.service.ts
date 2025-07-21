@@ -50,6 +50,7 @@ export class DistrictService {
       }
     });
   }
+
   addDistrict(district: District) {
     return addDoc(this.getCollection(), district);
   }

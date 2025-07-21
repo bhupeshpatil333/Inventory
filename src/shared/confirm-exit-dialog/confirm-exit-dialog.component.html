@@ -1,0 +1,6 @@
+<h2 mat-dialog-title>Unsaved Changes</h2>
+<mat-dialog-content>Are you sure you want to exit without saving?</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="dialogRef.close(false)">Continue</button>
+    <button mat-flat-button color="warn" (click)="dialogRef.close(true)">Exit</button>
+</mat-dialog-actions>

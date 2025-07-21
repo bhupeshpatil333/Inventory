@@ -24,23 +24,13 @@ export class DashboardComponent implements OnInit {
   titlePage: any
   authService = inject(AuthService);
   router = inject(Router);
-
-  title = 'Responsive Sidenav with Icons';
-
   isSmallScreen = false;
 
   constructor(private breakpointObserver: BreakpointObserver, private dialog: MatDialog, private location: Location, private titleStrategy: TitleStrategy) {
-
   }
 
   ngOnInit(): void {
   }
-
-  onSettings() {
-    alert('Logout clicked!');
-    // TODO: add logout logic here
-  }
-
 
   logout() {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
