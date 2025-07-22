@@ -6,6 +6,7 @@ import { DistrictService } from '../../../../shared/district.service';
 import { MaterialModule } from '../../../../shared/shared.module';
 import { DirtyCheckService } from '../../../../shared/services/dirty-check.service';
 import { ToastService } from '../../../../shared/services/toast.service';
+import { ToastType } from '../../../../shared/toast-type.enum';
 
 @Component({
   selector: 'app-district-form',
@@ -45,7 +46,7 @@ export class DistrictFormComponent {
       // Load once via Promise
       this.districtService.getDistrictById(this.id);
       // Subscribe to BehaviorSubject updates
-      this.districtService.districtSubById$.subscribe((data) => {
+      this.districtService.getDistrictById(this.id).then((data) => {
         if (data) {
           this.form.patchValue(data);
           this.loading = false;
@@ -68,15 +69,15 @@ export class DistrictFormComponent {
     try {
       if (this.id) {
         await this.districtService.updateDistrict(this.id, this.form.value);
-        this.toast.show('Updated Successfully.', 'success');
+        this.toast.show('Updated Successfully.', ToastType.Success);
         this.router.navigate(['dashboard/district']);
       } else {
         await this.districtService.addDistrict(this.form.value);
-        this.toast.show('Saved successfully!', 'success');
+        this.toast.show('Saved successfully!', ToastType.Success);
         this.router.navigate(['dashboard/district']);
       }
     } catch (error) {
-      this.toast.show('Something went wrong!', 'error');
+      this.toast.show('Something went wrong!', ToastType.Error);
     }
   }
 

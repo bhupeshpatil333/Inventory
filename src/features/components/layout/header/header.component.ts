@@ -18,6 +18,7 @@ export class HeaderComponent {
 
   titlePage: any;
   showBackButton = false; // 👈 flag for back button
+  isFormDirty: boolean = true; // ✅ manually set dirty state
 
   constructor(private breakpointObserver: BreakpointObserver, private dialog: MatDialog, private location: Location,
     private titleStrategy: TitleStrategy, private router: Router, private route: ActivatedRoute, private dirtyCheck: DirtyCheckService) {
@@ -32,8 +33,11 @@ export class HeaderComponent {
           this.titlePage = title;
         }
 
-        // ✅ Dynamic logic based on URL depth
-        this.setTitleAndBackButton(this.route);
+        // ✅ Calculate route depth from pathFromRoot
+        const urlSegments = this.router.url.split('/').filter(Boolean);
+        // Expecting pattern: ['dashboard', 'moduleName', ...]
+        // Show back button if URL has more than 2 segments
+        this.showBackButton = urlSegments.length > 2 && urlSegments[0] === 'dashboard';
       });
   }
 
@@ -49,18 +53,17 @@ export class HeaderComponent {
 
 
   goBack() {
-    if (this.dirtyCheck.isDirty) {
-      const dialogRef = this.dialog.open(ConfirmExitDialogComponent);
-
-      dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-        if (confirmed) {
-          this.dirtyCheck.isDirty = false; // reset
-          this.location.back(); // Navigate back
-        }
-        // else do nothing (stay on page)
-      });
+    if (this.isFormDirty) {
+      const confirmed = window.confirm('You have unsaved changes. Do you really want to go back?');
+      if (confirmed) {
+        this.dirtyCheck.isDirty = false; // reset dirty flag
+        this.location.back(); // Navigate back
+      }
+      // else: stay on page
     } else {
       this.location.back();
     }
+
+
   }
 }

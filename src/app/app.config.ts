@@ -9,6 +9,7 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { environment } from '../environment/environment';
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,5 +17,5 @@ export const appConfig: ApplicationConfig = {
     // provideDatabase(() => getDatabase()),
     provideFirestore(() => getFirestore()), // For compatibility module fpr firestore
     provideAuth(() => getAuth()),
-    provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideHttpClient()]
+    provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideHttpClient(), provideNativeDateAdapter()]
 };

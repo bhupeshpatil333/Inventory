@@ -27,19 +27,20 @@ export class DistrictComponent {
   }
 
   ngOnInit(): void {
-    // this.districtService.getDistricts().subscribe((data) => {
-    //   this.dataSource = data;
-    // });
-    this.districtService.districtSub$.subscribe(data => {
-      console.log('data: ', data);
-      this.dataSource = data;
-    })
     this.loading = true;
-    this.districtService.getDistrictData().then((data) => {
+    // this.districtService.getDistrictData().then((data) => {
+    //   if (data) {
+    //     this.dataSource = data;
+    //     this.loading = false;
+    //   }
+    // })
+    this.districtService.getDistrictDataRealtime().subscribe((data) => {
       if (data) {
+        this.dataSource = data;
         this.loading = false;
       }
     })
+
   }
 
   delete(id: string) {

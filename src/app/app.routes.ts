@@ -21,6 +21,10 @@ export const routes: Routes = [
                 path: 'district',
                 loadChildren: () => import('../features/components/district/district.routes').then(m => m.districtRoutes),
 
+            },
+            {
+                path: 'facility',
+                loadChildren: () => import('../features/components/facility/facility.routes').then(m => m.facilityRoutes),
             }
         ]
     },

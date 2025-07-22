@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, deleteDoc, doc, docData, Firestore, updateDoc } from '@angular/fire/firestore';
 import { District } from '../features/components/district/district.interface';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { getDoc, getDocs } from 'firebase/firestore';
+import { getDoc, getDocs, onSnapshot } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DistrictService {
 
-  districtSub$ = new BehaviorSubject<any[]>([]);
-  districtSubById$ = new BehaviorSubject<any | undefined>(null);
+  // districtSub$ = new BehaviorSubject<any[]>([]);
+  // districtSubById$ = new BehaviorSubject<any | undefined>(null);
 
   constructor(private firestore: Firestore) { }
 
@@ -26,13 +26,23 @@ export class DistrictService {
   //   return docData(districtDoc, { idField: 'id' }) as Observable<District>;
   // }
 
+  // realtime data
+  getDistrictDataRealtime(): Observable<any[]> {
+    const colRef = collection(this.firestore, 'districts');
+    return new Observable<any[]>(observer =>
+      onSnapshot(colRef, snapshot =>
+        observer.next(snapshot.docs.map(doc => ({ key: doc.id, ...doc.data() })))
+      )
+    );
+  }
+
+  // not realtime DB
   getDistrictData(): Promise<any[]> {
     return getDocs(this.getCollection()).then((res) => {
       const result = res.docs.map((doc) => ({
         key: doc.id,
         ...doc.data()
       }));
-      this.districtSub$.next(result);
       return result;
     });
   }
@@ -42,10 +52,8 @@ export class DistrictService {
     return getDoc(ref).then((docSnap) => {
       if (docSnap.exists()) {
         const data = { id: docSnap.id, ...docSnap.data() };
-        this.districtSubById$.next(data); // update BehaviorSubject
         return data;
       } else {
-        this.districtSubById$.next(null);
         return null;
       }
     });
