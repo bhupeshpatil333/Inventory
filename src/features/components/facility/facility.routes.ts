@@ -10,13 +10,13 @@ export const facilityRoutes: Routes = [
         data: { showBackButton: false }
     },
     {
-        path: 'add',
+        path: 'Add',
         component: FacilityAddEditComponent,
         title: 'Add Facility',
         data: { showBackButton: true }
     },
     {
-        path: 'edit/:id',
+        path: 'Edit/:id',
         component: FacilityAddEditComponent,
         title: 'Edit Facility',
         data: { showBackButton: true }

@@ -1,0 +1,29 @@
+<div class="container">
+    <h2>{{ isEdit ? 'Edit Item' : 'Add Item' }}</h2>
+
+    <form [formGroup]="itemForm" (ngSubmit)="submit()">
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name">
+        </mat-form-field>
+        ś
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Brand</mat-label>
+            <input matInput formControlName="brand">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Unit</mat-label>
+            <input matInput formControlName="unit">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Contains Per Unit</mat-label>
+            <input matInput formControlName="containsPerUnit">
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit">
+            {{ isEdit ? 'Update' : 'Add' }}
+        </button>
+    </form>
+</div>

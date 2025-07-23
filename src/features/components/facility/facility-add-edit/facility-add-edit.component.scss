@@ -1,0 +1,24 @@
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 20px 0 10px;
+}
+
+.form-wrapper {
+  input, textarea, .mat-input-element {
+    background-color: #fff;
+    color: #000;
+  }
+
+  .mat-form-field {
+    width: 100%;
+  }
+}
+
+.form-wrapper,input, .mat-input-element, textarea {
+  background-color: #fff !important;
+  color: #000 !important;
+  border: 1px solid #ccc !important;
+  padding: 6px !important;
+  font-size: 14px !important;
+}

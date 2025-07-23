@@ -63,7 +63,5 @@ export class HeaderComponent {
     } else {
       this.location.back();
     }
-
-
   }
 }

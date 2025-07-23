@@ -1,183 +1,130 @@
-<form [formGroup]="form">
-    <mat-card class="p-4">
-        <!-- Facility Details Section -->
-        <h2 class="text-lg font-semibold mb-2">Facility Details</h2>
-        <mat-grid-list cols="4" gutterSize="16px" rowHeight="fit">
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Facility Name</mat-label>
-                    <input matInput formControlName="facilityName" />
-                </mat-form-field>
-            </mat-grid-tile>
+<form [formGroup]="form" (ngSubmit)="submit()" class="p-4">
 
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>District</mat-label>
-                    <input matInput formControlName="facilityDistrict" />
-                </mat-form-field>
-            </mat-grid-tile>
+    <h2>Facility Details</h2>
 
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Block</mat-label>
-                    <input matInput formControlName="block" />
-                </mat-form-field>
-            </mat-grid-tile>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Facility Name</mat-label>
+        <input matInput formControlName="name" />
+    </mat-form-field>
 
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Type</mat-label>
-                    <mat-select formControlName="type">
-                        <mat-option value="Hospital">Hospital</mat-option>
-                        <mat-option value="Clinic">Clinic</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-grid-tile>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>District</mat-label>
+        <input matInput formControlName="district" />
+    </mat-form-field>
 
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Latitude</mat-label>
-                    <input matInput formControlName="latitude" />
-                </mat-form-field>
-            </mat-grid-tile>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Block</mat-label>
+        <input matInput formControlName="block" />
+    </mat-form-field>
 
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Longitude</mat-label>
-                    <input matInput formControlName="longitude" />
-                </mat-form-field>
-            </mat-grid-tile>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Type</mat-label>
+        <mat-select formControlName="type">
+            <mat-option value="Hospital">Hospital</mat-option>
+            <mat-option value="Clinic">Clinic</mat-option>
+        </mat-select>
+    </mat-form-field>
 
-            <mat-grid-tile colspan="4">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Geo Fencing Radius</mat-label>
-                    <input matInput formControlName="geoRadius" />
-                </mat-form-field>
-            </mat-grid-tile>
-        </mat-grid-list>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Latitude</mat-label>
+        <input matInput formControlName="latitude" />
+    </mat-form-field>
 
-        <mat-divider class="my-4"></mat-divider>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Longitude</mat-label>
+        <input matInput formControlName="longitude" />
+    </mat-form-field>
 
-        <!-- Employee Demographic Details -->
-        <h2 class="text-lg font-semibold mb-2">Employee Demographic Details</h2>
-        <mat-grid-list cols="4" gutterSize="16px" rowHeight="fit">
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Employee Code</mat-label>
-                    <input matInput formControlName="employeeCode" />
-                </mat-form-field>
-            </mat-grid-tile>
+    <mat-form-field appearance="outline" class="w-full mb-4">
+        <mat-label>Geo Fencing Radius</mat-label>
+        <input matInput formControlName="geoRadius" />
+    </mat-form-field>
 
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>First Name</mat-label>
-                    <input matInput formControlName="firstName" />
-                </mat-form-field>
-            </mat-grid-tile>
+    <h2 class="mt-6">Employee Demographic Details</h2>
 
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Last Name</mat-label>
-                    <input matInput formControlName="lastName" />
-                </mat-form-field>
-            </mat-grid-tile>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Employee Code</mat-label>
+        <input matInput formControlName="employeeCode" />
+    </mat-form-field>
 
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Father/Husband Name</mat-label>
-                    <input matInput formControlName="fatherHusbandName" />
-                </mat-form-field>
-            </mat-grid-tile>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>First Name</mat-label>
+        <input matInput formControlName="firstName" />
+    </mat-form-field>
 
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Mother Name</mat-label>
-                    <input matInput formControlName="motherName" />
-                </mat-form-field>
-            </mat-grid-tile>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Last Name</mat-label>
+        <input matInput formControlName="lastName" />
+    </mat-form-field>
 
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Date of Birth</mat-label>
-                    <input matInput [matDatepicker]="dobPicker" formControlName="dob" />
-                    <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
-                    <mat-datepicker #dobPicker></mat-datepicker>
-                </mat-form-field>
-            </mat-grid-tile>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Father/Husband Name</mat-label>
+        <input matInput formControlName="fatherHusbandName" />
+    </mat-form-field>
 
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Date of Joining</mat-label>
-                    <input matInput [matDatepicker]="dojPicker" formControlName="doj" />
-                    <mat-datepicker-toggle matSuffix [for]="dojPicker"></mat-datepicker-toggle>
-                    <mat-datepicker #dojPicker></mat-datepicker>
-                </mat-form-field>
-            </mat-grid-tile>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Mother Name</mat-label>
+        <input matInput formControlName="motherName" />
+    </mat-form-field>
 
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Nationality</mat-label>
-                    <input matInput formControlName="nationality" />
-                </mat-form-field>
-            </mat-grid-tile>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Date of Birth</mat-label>
+        <input matInput [matDatepicker]="dobPicker" formControlName="dob" />
+        <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
+        <mat-datepicker #dobPicker></mat-datepicker>
+    </mat-form-field>
 
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Religion</mat-label>
-                    <input matInput formControlName="religion" />
-                </mat-form-field>
-            </mat-grid-tile>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Date of Joining</mat-label>
+        <input matInput [matDatepicker]="dojPicker" formControlName="doj" />
+        <mat-datepicker-toggle matSuffix [for]="dojPicker"></mat-datepicker-toggle>
+        <mat-datepicker #dojPicker></mat-datepicker>
+    </mat-form-field>
 
-            <mat-grid-tile colspan="4">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Aadhaar Number</mat-label>
-                    <input matInput formControlName="aadhaar" />
-                </mat-form-field>
-            </mat-grid-tile>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Nationality</mat-label>
+        <input matInput formControlName="nationality" />
+    </mat-form-field>
 
-            <mat-grid-tile colspan="4">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Address</mat-label>
-                    <textarea matInput formControlName="address" rows="3"></textarea>
-                </mat-form-field>
-            </mat-grid-tile>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Religion</mat-label>
+        <input matInput formControlName="religion" />
+    </mat-form-field>
 
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>District</mat-label>
-                    <input matInput formControlName="empDistrict" />
-                </mat-form-field>
-            </mat-grid-tile>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Aadhaar Number</mat-label>
+        <input matInput formControlName="aadhaar" />
+    </mat-form-field>
 
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>State</mat-label>
-                    <mat-select formControlName="state">
-                        <mat-option *ngFor="let state of states" [value]="state">{{ state }}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-grid-tile>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Address</mat-label>
+        <textarea matInput formControlName="address" rows="3"></textarea>
+    </mat-form-field>
 
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>PIN Code</mat-label>
-                    <input matInput formControlName="pincode" />
-                </mat-form-field>
-            </mat-grid-tile>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>District</mat-label>
+        <input matInput formControlName="empDistrict" />
+    </mat-form-field>
 
-            <mat-grid-tile colspan="2">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Password</mat-label>
-                    <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" />
-                    <button mat-icon-button matSuffix (click)="hide = !hide" type="button">
-                        <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
-                    </button>
-                </mat-form-field>
-            </mat-grid-tile>
-        </mat-grid-list>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>State</mat-label>
+        <mat-select formControlName="state">
+            <mat-option *ngFor="let state of states" [value]="state">{{ state }}</mat-option>
+        </mat-select>
+    </mat-form-field>
 
-        <div class="text-right mt-4">
-            <button mat-raised-button color="primary" type="submit">Submit</button>
-        </div>
-    </mat-card>
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>PIN Code</mat-label>
+        <input matInput formControlName="pincode" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full mb-4">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" />
+        <button mat-icon-button matSuffix (click)="hide = !hide" type="button">
+            <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">Submit</button>
 </form>

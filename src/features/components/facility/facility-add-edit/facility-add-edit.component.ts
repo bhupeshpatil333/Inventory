@@ -2,7 +2,11 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../../../shared/shared.module';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FacilityService } from '../facility.service';
+import { ToastType } from '../../../../shared/toast-type.enum';
+import { ToastService } from '../../../../shared/services/toast.service';
+import { DistrictService } from '../../../../shared/district.service';
 
 @Component({
   selector: 'app-facility-add-edit',
@@ -12,15 +16,16 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class FacilityAddEditComponent {
 
-  form: FormGroup;
+  form!: FormGroup;
   facilityId: string | null = null;
   hide = true;
   states: string[] = ['Maharashtra', 'Gujarat', 'Rajasthan']; // or fetch from API
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute) {
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private facilityService: FacilityService, private toast: ToastService, private districtService: DistrictService,
+    private router: Router,) {
     this.form = this.fb.group({
-      facilityName: [''],
-      facilityDistrict: [''],
+      name: [''],
+      district: [''],
       block: [''],
       type: [''],
       latitude: [''],
@@ -46,18 +51,24 @@ export class FacilityAddEditComponent {
     this.route.paramMap.subscribe(params => {
       this.facilityId = params.get('id');
       if (this.facilityId) {
-        // this.patchForm(this.facilityId);
+        this.facilityService.getFacilitytById(this.facilityId).then((data) => {
+          if (data) {
+            this.form.patchValue(data);
+          }
+        });
       }
     });
   }
 
   submit() {
-    if (this.form.invalid) return;
-
     if (this.facilityId) {
-      console.log('Update:', this.form.value);
+      this.facilityService.updateFacility(this.facilityId, this.form.value);
+      this.toast.show('Updated Successfully.', ToastType.Success);
+      this.router.navigate(['dashboard/facility']);
     } else {
-      console.log('Create:', this.form.value);
+      this.facilityService.addFacility(this.form.value);
+      this.toast.show('Saved successfully!', ToastType.Success);
+      this.router.navigate(['dashboard/facility']);
     }
   }
 
