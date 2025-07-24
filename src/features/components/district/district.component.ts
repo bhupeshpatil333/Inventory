@@ -34,7 +34,7 @@ export class DistrictComponent {
     //     this.loading = false;
     //   }
     // })
-    this.districtService.getDistrictDataRealtime().subscribe((data) => {
+    this.districtService.getDistrictData().then((data) => {
       if (data) {
         this.dataSource = data;
         this.loading = false;
@@ -46,18 +46,20 @@ export class DistrictComponent {
   delete(id: string) {
     const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent);
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       if (result) {
-        this.districtService.deleteDistrict(id).then(() => {
-          console.log('District deleted');
-        });
+        await this.districtService.deleteDistrict(id);
+        console.log('District deleted');
+
+        // ✅ Refresh the list and update UI
+        this.dataSource = await this.districtService.getDistrictData();
       }
     });
   }
 
-  edit(id: string) {
-    console.log('id: ', id);
-    this.router.navigate(['/dashboard/district/edit', id]);
+
+  edit(data: any) {
+    this.router.navigate(['/dashboard/district/edit', data.key], { state: { data: data } });
   }
 
   add() {

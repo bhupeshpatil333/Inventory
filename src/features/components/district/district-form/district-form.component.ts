@@ -16,6 +16,9 @@ import { ToastType } from '../../../../shared/toast-type.enum';
 })
 export class DistrictFormComponent {
 
+  districtData: any;
+  districtId: string | null = null;
+
   form!: FormGroup;
   id: string | null = null;
   loading = true;
@@ -38,25 +41,37 @@ export class DistrictFormComponent {
       password: ['', [Validators.required, Validators.pattern(/\S+/)]],
     });
 
-    this.id = this.route.snapshot.paramMap.get('id');
-    // if (this.id) {
-    //   this.districtService.getDistrictById(this.id).subscribe(data => this.form.patchValue(data));
-    // }
-    if (this.id) {
-      // Load once via Promise
-      this.districtService.getDistrictById(this.id);
-      // Subscribe to BehaviorSubject updates
-      this.districtService.getDistrictById(this.id).then((data) => {
-        if (data) {
-          this.form.patchValue(data);
-          this.loading = false;
-        }
-        else {
-          this.loading = false;
-        }
-      });
+    // Get ID from route param
+    // this.districtId = this.route.snapshot.paramMap.get('id');
 
+    // Try getting full object from navigation state
+    this.districtData = history.state.data;
+    console.log('this.districtData: ', this.districtData);
+    this.id = this.districtData?.key;
+
+    if (this.districtData) {
+      this.form.patchValue(this.districtData);
     }
+
+    // this.id = this.route.snapshot.paramMap.get('id');
+    // // if (this.id) {
+    // //   this.districtService.getDistrictById(this.id).subscribe(data => this.form.patchValue(data));
+    // // }
+    // if (this.id) {
+    //   // Load once via Promise
+    //   // this.districtService.getDistrictById(this.id);
+    //   // Subscribe to BehaviorSubject updates
+    //   this.districtService.getDistrictById(this.id).then((data) => {
+    //     if (data) {
+    //       this.form.patchValue(data);
+    //       this.loading = false;
+    //     }
+    //     else {
+    //       this.loading = false;
+    //     }
+    //   });
+
+    // }
 
     this.form.valueChanges.subscribe(() => {
       this.dirtyCheck.isDirty = this.form.dirty;

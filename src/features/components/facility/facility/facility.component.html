@@ -44,7 +44,7 @@
         <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef>Action</th>
             <td mat-cell *matCellDef="let row">
-                <button mat-mini-button color="accent" (click)="editFacility(row.key)">Edit</button>
+                <button mat-mini-button color="accent" (click)="editFacility(row)">Edit</button>
                 <button mat-mini-button color="warn" (click)="deleteFacility(row.key)">Delete</button>
             </td>
         </ng-container>

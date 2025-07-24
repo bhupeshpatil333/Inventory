@@ -24,25 +24,48 @@ export class FacilityComponent {
 
   constructor(private router: Router, private facilityService: FacilityService, private districtService: DistrictService) { }
 
-  ngOnInit() {
-    this.districtService.getDistrictData().then((districts) => {
-      this.districts = districts;
+  async ngOnInit() {
+    // this.districtService.getDistrictData().then((districts) => {
+    //   this.districts = districts;
 
-      this.facilityService.getFacilitytData().then((facilities) => {
-        this.facilities = facilities.map(facility => {
-          const matchedDistrict = this.districts.find(d => d.district === facility.district);
-          return {
-            ...facility,
-            adminName: matchedDistrict?.adminName || ''
-            // you can add other district fields similarly
-          };
-        });
-        // ✅ Extract and store unique district
-        const district = this.facilities.map((i: any) => i.district).filter((t: any) => !!t); // remove null/undefined
-        this.uniqueDistricts = [...new Set(district)];
-      });
-    });
+    //   this.facilityService.getFacilitytData().then((facilities) => {
+    //     this.facilities = facilities.map(facility => {
+    //       const matchedDistrict = this.districts.find(d => d.district === facility.district);
+    //       return {
+    //         ...facility,
+    //         adminName: matchedDistrict?.adminName || ''
+    //         // you can add other district fields similarly
+    //       };
+    //     });
+    //     // ✅ Extract and store unique district
+    //     const district = this.facilities.map((i: any) => i.district).filter((t: any) => !!t); // remove null/undefined
+    //     this.uniqueDistricts = [...new Set(district)];
+    //   });
+    // });
+
+    await this.loadData();
   }
+
+  async loadData() {
+    try {
+      this.districts = await this.districtService.getDistrictData();
+      const facilities = await this.facilityService.getFacilitytData();
+
+      this.facilities = facilities.map(facility => {
+        const matchedDistrict = this.districts.find(d => d.district === facility.district);
+        return {
+          ...facility,
+          adminName: matchedDistrict?.adminName || ''
+        };
+      });
+
+      const district = this.facilities.map((i: any) => i.district).filter((t: any) => !!t);
+      this.uniqueDistricts = [...new Set(district)];
+    } catch (error) {
+      console.error('Error loading data:', error);
+    }
+  }
+
 
 
 
@@ -65,14 +88,14 @@ export class FacilityComponent {
     this.router.navigate(['/dashboard/facility/Add']);
   }
 
-  editFacility(id: string) {
-    this.router.navigate(['/dashboard/facility/Edit', id]);
+  editFacility(data: any) {
+    // this.router.navigate(['/dashboard/facility/Edit', id]);
+    this.router.navigate(['/dashboard/facility/Edit', data.key], { state: { data: data } });
   }
 
-  deleteFacility(id: string) {
+  async deleteFacility(id: string) {
     alert(`Delete facility with ID: ${id}`);
-    this.facilityService.deleteFacility(id).then(() => {
-      console.log('District deleted');
-    });
+    await this.facilityService.deleteFacility(id);
+    await this.loadData();
   }
 }

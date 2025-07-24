@@ -15,6 +15,8 @@ import { DistrictService } from '../../../../shared/district.service';
   styleUrl: './facility-add-edit.component.scss'
 })
 export class FacilityAddEditComponent {
+  facilityData!: any;
+
 
   form!: FormGroup;
   facilityId: string | null = null;
@@ -48,16 +50,24 @@ export class FacilityAddEditComponent {
       password: [''],
     });
 
-    this.route.paramMap.subscribe(params => {
-      this.facilityId = params.get('id');
-      if (this.facilityId) {
-        this.facilityService.getFacilitytById(this.facilityId).then((data) => {
-          if (data) {
-            this.form.patchValue(data);
-          }
-        });
-      }
-    });
+    this.facilityData = history.state.data;
+    console.log('this.facilityData: ', this.facilityData);
+    this.facilityId = this.facilityData?.key;
+
+    if (this.facilityData) {
+      this.form.patchValue(this.facilityData);
+    }
+
+    // this.route.paramMap.subscribe(params => {
+    //   this.facilityId = params.get('id');
+    //   if (this.facilityId) {
+    //     this.facilityService.getFacilitytById(this.facilityId).then((data) => {
+    //       if (data) {
+    //         this.form.patchValue(data);
+    //       }
+    //     });
+    //   }
+    // });
   }
 
   submit() {
