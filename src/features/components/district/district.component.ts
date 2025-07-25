@@ -18,7 +18,7 @@ import { DeleteConfirmationDialogComponent } from '../../../shared/confirmDialog
 export class DistrictComponent {
 
   displayedColumns = ['district', 'adminName', 'phone', 'email', 'actions'];
-  dataSource: District[] = [];
+  dataSource: any[] = [];
   searchText: string = '';
   loading = false;
 
@@ -69,7 +69,7 @@ export class DistrictComponent {
   get filteredData() {
     const search = this.searchText.toLowerCase();
     return this.dataSource.filter(d =>
-      (d?.district || '').toLowerCase().includes(search) ||
+      (d?.name || '').toLowerCase().includes(search) ||
       (d?.adminName || '').toLowerCase().includes(search)
     );
   }

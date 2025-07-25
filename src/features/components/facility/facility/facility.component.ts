@@ -25,23 +25,6 @@ export class FacilityComponent {
   constructor(private router: Router, private facilityService: FacilityService, private districtService: DistrictService) { }
 
   async ngOnInit() {
-    // this.districtService.getDistrictData().then((districts) => {
-    //   this.districts = districts;
-
-    //   this.facilityService.getFacilitytData().then((facilities) => {
-    //     this.facilities = facilities.map(facility => {
-    //       const matchedDistrict = this.districts.find(d => d.district === facility.district);
-    //       return {
-    //         ...facility,
-    //         adminName: matchedDistrict?.adminName || ''
-    //         // you can add other district fields similarly
-    //       };
-    //     });
-    //     // ✅ Extract and store unique district
-    //     const district = this.facilities.map((i: any) => i.district).filter((t: any) => !!t); // remove null/undefined
-    //     this.uniqueDistricts = [...new Set(district)];
-    //   });
-    // });
 
     await this.loadData();
   }
@@ -49,18 +32,11 @@ export class FacilityComponent {
   async loadData() {
     try {
       this.districts = await this.districtService.getDistrictData();
+      console.log('this.districts: ', this.districts);
       const facilities = await this.facilityService.getFacilitytData();
+      this.facilities = facilities;
+      console.log('this.facilities: ', this.facilities);
 
-      this.facilities = facilities.map(facility => {
-        const matchedDistrict = this.districts.find(d => d.district === facility.district);
-        return {
-          ...facility,
-          adminName: matchedDistrict?.adminName || ''
-        };
-      });
-
-      const district = this.facilities.map((i: any) => i.district).filter((t: any) => !!t);
-      this.uniqueDistricts = [...new Set(district)];
     } catch (error) {
       console.error('Error loading data:', error);
     }
@@ -79,7 +55,7 @@ export class FacilityComponent {
         (facility?.adminName || '').toLowerCase().includes(search);
 
       const matchesDistrict =
-        !this.selectedDistrict || (facility.district || '').toLowerCase() === this.selectedDistrict;
+        !this.selectedDistrict || facility.districtId === this.selectedDistrict;
       return matchesSearch && matchesDistrict;
     });
   }

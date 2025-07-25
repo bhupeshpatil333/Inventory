@@ -1,15 +1,17 @@
 <form [formGroup]="form" (ngSubmit)="submit()" class="p-4">
-
     <h2>Facility Details</h2>
-
     <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>Facility Name</mat-label>
         <input matInput formControlName="name" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-full mb-2">
-        <mat-label>District</mat-label>
-        <input matInput formControlName="district" />
+        <mat-label>Posting District</mat-label>
+        <mat-select formControlName="districtId">
+            <mat-option *ngFor="let district of districtData" [value]="district.key">
+                {{ district.name }}
+            </mat-option>
+        </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-full mb-2">
@@ -22,6 +24,14 @@
         <mat-select formControlName="type">
             <mat-option value="Hospital">Hospital</mat-option>
             <mat-option value="Clinic">Clinic</mat-option>
+            <mat-option value="CHC">CHC (Community Health Center)</mat-option>
+            <mat-option value="PHC">PHC (Primary Health Center)</mat-option>
+            <mat-option value="Sub Center">Sub Center</mat-option>
+            <mat-option value="Dispensary">Dispensary</mat-option>
+            <mat-option value="Health Post">Health Post</mat-option>
+            <mat-option value="Nursing Home">Nursing Home</mat-option>
+            <mat-option value="Private Facility">Private Facility</mat-option>
+            <mat-option value="Mobile Medical Unit">Mobile Medical Unit</mat-option>
         </mat-select>
     </mat-form-field>
 
@@ -50,6 +60,11 @@
     <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>First Name</mat-label>
         <input matInput formControlName="firstName" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Email</mat-label>
+        <input type="email" matInput formControlName="email" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-full mb-2">
@@ -103,7 +118,7 @@
 
     <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>District</mat-label>
-        <input matInput formControlName="empDistrict" />
+        <input matInput formControlName="district" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-full mb-2">
@@ -125,6 +140,5 @@
             <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
     </mat-form-field>
-
     <button mat-raised-button color="primary" type="submit">Submit</button>
 </form>

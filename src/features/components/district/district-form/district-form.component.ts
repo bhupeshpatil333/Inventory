@@ -34,15 +34,13 @@ export class DistrictFormComponent {
 
   ngOnInit() {
     this.form = this.fb.group({
-      district: ['', [Validators.required, Validators.pattern(/\S+/)]],
+      name: ['', [Validators.required, Validators.pattern(/\S+/)]],
       adminName: ['', [Validators.required, Validators.pattern(/\S+/)]],
       phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.pattern(/\S+/)]],
     });
 
-    // Get ID from route param
-    // this.districtId = this.route.snapshot.paramMap.get('id');
 
     // Try getting full object from navigation state
     this.districtData = history.state.data;
@@ -53,25 +51,6 @@ export class DistrictFormComponent {
       this.form.patchValue(this.districtData);
     }
 
-    // this.id = this.route.snapshot.paramMap.get('id');
-    // // if (this.id) {
-    // //   this.districtService.getDistrictById(this.id).subscribe(data => this.form.patchValue(data));
-    // // }
-    // if (this.id) {
-    //   // Load once via Promise
-    //   // this.districtService.getDistrictById(this.id);
-    //   // Subscribe to BehaviorSubject updates
-    //   this.districtService.getDistrictById(this.id).then((data) => {
-    //     if (data) {
-    //       this.form.patchValue(data);
-    //       this.loading = false;
-    //     }
-    //     else {
-    //       this.loading = false;
-    //     }
-    //   });
-
-    // }
 
     this.form.valueChanges.subscribe(() => {
       this.dirtyCheck.isDirty = this.form.dirty;

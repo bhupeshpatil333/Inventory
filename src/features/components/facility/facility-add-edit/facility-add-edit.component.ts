@@ -16,7 +16,7 @@ import { DistrictService } from '../../../../shared/district.service';
 })
 export class FacilityAddEditComponent {
   facilityData!: any;
-
+  districtData: any[] = [];
 
   form!: FormGroup;
   facilityId: string | null = null;
@@ -27,7 +27,7 @@ export class FacilityAddEditComponent {
     private router: Router,) {
     this.form = this.fb.group({
       name: [''],
-      district: [''],
+      districtId: [''],
       block: [''],
       type: [''],
       latitude: [''],
@@ -44,7 +44,8 @@ export class FacilityAddEditComponent {
       religion: [''],
       aadhaar: [''],
       address: [''],
-      empDistrict: [''],
+      district: [''],
+      email: [''],
       state: [''],
       pincode: [''],
       password: [''],
@@ -53,21 +54,14 @@ export class FacilityAddEditComponent {
     this.facilityData = history.state.data;
     console.log('this.facilityData: ', this.facilityData);
     this.facilityId = this.facilityData?.key;
+    this.districtService.getDistrictData().then((data) => {
+      this.districtData = data;
+    })
+
 
     if (this.facilityData) {
       this.form.patchValue(this.facilityData);
     }
-
-    // this.route.paramMap.subscribe(params => {
-    //   this.facilityId = params.get('id');
-    //   if (this.facilityId) {
-    //     this.facilityService.getFacilitytById(this.facilityId).then((data) => {
-    //       if (data) {
-    //         this.form.patchValue(data);
-    //       }
-    //     });
-    //   }
-    // });
   }
 
   submit() {
