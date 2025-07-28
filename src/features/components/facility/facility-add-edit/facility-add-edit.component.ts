@@ -17,11 +17,23 @@ import { DistrictService } from '../../../../shared/district.service';
 export class FacilityAddEditComponent {
   facilityData!: any;
   districtData: any[] = [];
-
+  isEdit: boolean = false;
   form!: FormGroup;
   facilityId: string | null = null;
   hide = true;
   states: string[] = ['Maharashtra', 'Gujarat', 'Rajasthan']; // or fetch from API
+  facilityType = [
+    { key: 'hospital', name: 'Hospital' },
+    { key: 'clinic', name: 'Clinic' },
+    { key: 'chc', name: 'CHC (Community Health Center)' },
+    { key: 'phc', name: 'PHC (Primary Health Center)' },
+    { key: 'sub-center', name: 'Sub Center' },
+    { key: 'dispensary', name: 'Dispensary' },
+    { key: 'health-post', name: 'Health Post' },
+    { key: 'nursing-home', name: 'Nursing Home' },
+    { key: 'private-facility', name: 'Private Facility' },
+    { key: 'mmu', name: 'Mobile Medical Unit' }
+  ];
 
   constructor(private fb: FormBuilder, private route: ActivatedRoute, private facilityService: FacilityService, private toast: ToastService, private districtService: DistrictService,
     private router: Router,) {
@@ -53,7 +65,10 @@ export class FacilityAddEditComponent {
 
     this.facilityData = history.state.data;
     console.log('this.facilityData: ', this.facilityData);
-    this.facilityId = this.facilityData?.key;
+    // this.facilityId = this.facilityData?.key;
+    this.isEdit = history.state.isEdit;
+
+
     this.districtService.getDistrictData().then((data) => {
       this.districtData = data;
     })
@@ -65,8 +80,8 @@ export class FacilityAddEditComponent {
   }
 
   submit() {
-    if (this.facilityId) {
-      this.facilityService.updateFacility(this.facilityId, this.form.value);
+    if (this.isEdit) {
+      this.facilityService.updateFacility(this.facilityData?.key, this.form.value);
       this.toast.show('Updated Successfully.', ToastType.Success);
       this.router.navigate(['dashboard/facility']);
     } else {

@@ -27,23 +27,45 @@ export class ItemComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     try {
       this.facilities = await this.facilityService.getFacilitytData();
+      console.log('this.facilities: ', this.facilities);
       // ✅ Extract unique types from facility list
       this.facilityTypes = [...new Set(this.facilities.map((f: any) => f.type))];
 
       this.items = await this.itemService.getItemData();
+      console.log('selected type: ', this.selectedType)
+
     } catch (error) {
       console.error('Error loading data:', error);
     }
   }
+
+  getUnitConversion(stock: any): string {
+    switch (stock.unit) {
+      case 'Packet':
+        return `${stock.containsPerUnit} Pieces`;
+      case 'Litre':
+        return `${stock.containsPerUnit} ml`;
+      case 'Kg':
+        return `${stock.containsPerUnit} g`;
+      case 'Tablet':
+      case 'Pieces':
+        return '-'; // no conversion
+      default:
+        return stock.containsPerUnit;
+    }
+  }
+
 
   get filteredItems() {
     const search = (this.searchText || '').toLowerCase();
     return this.items.filter((item: any) => {
       const matchesSearch =
         (item?.name || '').toLowerCase().includes(search) ||
-        (item?.brand || '').toLowerCase().includes(search);
+        (item?.brand || '').toLowerCase().includes(search) ||
+        (item?.type || '').toLowerCase().includes(search);
       const matchesType =
         !this.selectedType || (item?.type || '').toLowerCase() === this.selectedType.toLowerCase();
+
       return matchesSearch && matchesType;
     });
   }
@@ -55,7 +77,7 @@ export class ItemComponent implements OnInit {
 
   editItem(item: any) {
     if (item) {
-      this.router.navigate(['dashboard/items/edit', item]);
+      this.router.navigate(['dashboard/items/edit', item.key], { state: { data: item, isEdit: true } });
     }
   }
 

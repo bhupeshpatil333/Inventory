@@ -1,0 +1,60 @@
+<h2>Stock Allocation</h2>
+
+<form [formGroup]="allocationForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+    <div class="mb-3">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" formControlName="allocationType" value="district"
+                id="districtRadio">
+            <label class="form-check-label" for="districtRadio">District</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" formControlName="allocationType" value="facility"
+                id="facilityRadio">
+            <label class="form-check-label" for="facilityRadio">Facility</label>
+        </div>
+    </div>
+
+    <div *ngIf="allocationForm.get('allocationType')?.value === 'district'" class="mb-3">
+        <label for="districtSelect" class="form-label">District</label>
+        <select class="form-select" formControlName="district" id="districtSelect">
+            <option value="">All</option>
+            <option *ngFor="let d of districts" [value]="d.key">{{ d.name }}</option>
+        </select>
+    </div>
+
+    <div *ngIf="allocationForm.get('allocationType')?.value === 'facility'" class="mb-3">
+        <label for="facilitySelect" class="form-label">Facility</label>
+        <select class="form-select" formControlName="facility" id="facilitySelect">
+            <option value="">All</option>
+            <option *ngFor="let f of facilities" [value]="f.key">{{ f.name }}</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="itemSelect" class="form-label">Item</label>
+        <select class="form-select" formControlName="item" id="itemSelect">
+            <option value="">All</option>
+            <option *ngFor="let f of items" [value]="f.key">{{ f.name }}</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="availableStock" class="form-label">Available Stock</label>
+        <input type="number" class="form-control" formControlName="availableStock" id="availableStock" required>
+        <div class="invalid-feedback">
+            Please provide available stock.
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="allocateQuantity" class="form-label">Allocate Quantity</label>
+        <input type="number" class="form-control" formControlName="allocateQuantity" id="allocateQuantity" required>
+        <div class="invalid-feedback">
+            Please provide allocate quantity.
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit" [disabled]="allocationForm.invalid">
+        Submit
+    </button>
+</form>

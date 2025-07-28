@@ -13,12 +13,11 @@ import { ItemService } from '../service/item.service';
   styleUrl: './item-add-edit.component.scss'
 })
 export class ItemAddEditComponent {
-
   itemForm!: FormGroup;
-  // types = ['Hospital', 'Clinic'];
+  itemsData: any;
   isEdit = false;
   itemId: string | null = null;
-
+  quantityUnits: string[] = ['Packet', 'Pieces', 'Litre', 'ml', 'g', 'Kg', 'Tablet'];
   constructor(private fb: FormBuilder, private route: ActivatedRoute, private router: Router, private itemService: ItemService,) {
     this.itemForm = this.fb.group({
       name: [''],
@@ -30,26 +29,28 @@ export class ItemAddEditComponent {
   }
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.isEdit = true;
-      this.itemId = id;
-      console.log('this.itemId: ', this.itemId);
+    this.isEdit = history.state.isEdit;
+    this.itemsData = history.state.data;
 
-      this.itemService.getItemById(this.itemId).then(item => {
-        if (item) {
-          this.itemForm.patchValue(item);
-        }
-      });
+    if (this.itemsData) {
+      this.itemForm.patchValue(this.itemsData);
     }
+
+    // if (typeof (history.state.data.key) !== 'undefined') {
+    //   this.isEdit = true;
+    //   console.log('this.itemId: ', history.state.data.key);
+
+    //   this.itemForm.patchValue(history.state.data);
+
+    // }
   }
 
   submit(): void {
     if (this.itemForm.valid) {
       const formData = this.itemForm.value;
 
-      if (this.isEdit && this.itemId) {
-        this.itemService.updateItem(this.itemId, formData).then(() => {
+      if (this.isEdit) {
+        this.itemService.updateItem(this.itemsData?.key, formData).then(() => {
           this.router.navigate(['/dashboard/items']);
         });
       } else {

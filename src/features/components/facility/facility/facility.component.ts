@@ -66,7 +66,7 @@ export class FacilityComponent {
 
   editFacility(data: any) {
     // this.router.navigate(['/dashboard/facility/Edit', id]);
-    this.router.navigate(['/dashboard/facility/Edit', data.key], { state: { data: data } });
+    this.router.navigate(['/dashboard/facility/Edit', data.key], { state: { data: data, isEdit: true } });
   }
 
   async deleteFacility(id: string) {

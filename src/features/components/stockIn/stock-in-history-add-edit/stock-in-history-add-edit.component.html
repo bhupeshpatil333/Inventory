@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit' : 'Add' }} Stock In</h2>
+<form [formGroup]="stockForm" (ngSubmit)="submit()">
+
+    <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Item</mat-label>
+        <mat-select formControlName="item">
+            <mat-option *ngFor="let item of items" [value]="item.key">{{ item.name }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+
+    <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Quantity</mat-label>
+        <input matInput type="number" formControlName="quantity">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Date of Entry</mat-label>
+        <input matInput [matDatepicker]="entryPicker" formControlName="dateOfEntry">
+        <mat-datepicker-toggle matSuffix [for]="entryPicker"></mat-datepicker-toggle>
+        <mat-datepicker #entryPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Date of Expiry</mat-label>
+        <input matInput [matDatepicker]="expiryPicker" formControlName="dateOfExpiry">
+        <mat-datepicker-toggle matSuffix [for]="expiryPicker"></mat-datepicker-toggle>
+        <mat-datepicker #expiryPicker></mat-datepicker>
+    </mat-form-field>
+
+    <div>
+        <button mat-flat-button color="primary" type="submit">
+            {{ isEdit ? 'Update' : 'Add' }}
+        </button>
+    </div>
+</form>

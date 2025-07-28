@@ -29,6 +29,14 @@ export const routes: Routes = [
             {
                 path: 'items',
                 loadChildren: () => import('../features/components/items/items.routes').then(m => m.itemRoutes),
+            },
+            {
+                path: 'stockIn',
+                loadChildren: () => import('../features/components/stockIn/stockin.routes').then(m => m.stockInRoutes),
+            },
+            {
+                path: 'allocationHistory',
+                loadChildren: () => import('../features/components/allocation-history/allocation-history.routes').then(m => m.allocationRoutes),
             }
 
         ]

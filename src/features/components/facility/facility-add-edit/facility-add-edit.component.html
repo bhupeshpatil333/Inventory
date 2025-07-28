@@ -22,16 +22,9 @@
     <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>Type</mat-label>
         <mat-select formControlName="type">
-            <mat-option value="Hospital">Hospital</mat-option>
-            <mat-option value="Clinic">Clinic</mat-option>
-            <mat-option value="CHC">CHC (Community Health Center)</mat-option>
-            <mat-option value="PHC">PHC (Primary Health Center)</mat-option>
-            <mat-option value="Sub Center">Sub Center</mat-option>
-            <mat-option value="Dispensary">Dispensary</mat-option>
-            <mat-option value="Health Post">Health Post</mat-option>
-            <mat-option value="Nursing Home">Nursing Home</mat-option>
-            <mat-option value="Private Facility">Private Facility</mat-option>
-            <mat-option value="Mobile Medical Unit">Mobile Medical Unit</mat-option>
+            <mat-option *ngFor="let type of facilityType" [value]="type.key">
+                {{ type.name }}
+            </mat-option>
         </mat-select>
     </mat-form-field>
 
