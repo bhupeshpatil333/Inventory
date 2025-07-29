@@ -1,5 +1,4 @@
 <h2>Stock Allocation</h2>
-
 <form [formGroup]="allocationForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
     <div class="mb-3">
         <div class="form-check form-check-inline">
@@ -16,33 +15,31 @@
 
     <div *ngIf="allocationForm.get('allocationType')?.value === 'district'" class="mb-3">
         <label for="districtSelect" class="form-label">District</label>
-        <select class="form-select" formControlName="district" id="districtSelect">
-            <option value="">All</option>
-            <option *ngFor="let d of districts" [value]="d.key">{{ d.name }}</option>
-        </select>
+        <mat-select class="form-select" formControlName="district" id="districtSelect">
+            <mat-option *ngFor="let d of districts" [value]="d.key">{{ d.name }}</mat-option>
+        </mat-select>
     </div>
 
     <div *ngIf="allocationForm.get('allocationType')?.value === 'facility'" class="mb-3">
         <label for="facilitySelect" class="form-label">Facility</label>
-        <select class="form-select" formControlName="facility" id="facilitySelect">
-            <option value="">All</option>
-            <option *ngFor="let f of facilities" [value]="f.key">{{ f.name }}</option>
-        </select>
+        <mat-select class="form-select" formControlName="facility" id="facilitySelect">
+            <mat-option *ngFor="let f of facilities" [value]="f.key">{{ f.name }}</mat-option>
+        </mat-select>
     </div>
 
     <div class="mb-3">
         <label for="itemSelect" class="form-label">Item</label>
-        <select class="form-select" formControlName="item" id="itemSelect">
-            <option value="">All</option>
-            <option *ngFor="let f of items" [value]="f.key">{{ f.name }}</option>
-        </select>
+        <mat-select class="form-select" formControlName="item" id="itemSelect">
+            <mat-option *ngFor="let f of items" [value]="f.key">{{ f.name }}</mat-option>
+        </mat-select>
     </div>
 
-    <div class="mb-3">
+    <div class="mb-3 d-flex gap-3">
         <label for="availableStock" class="form-label">Available Stock</label>
-        <input type="number" class="form-control" formControlName="availableStock" id="availableStock" required>
-        <div class="invalid-feedback">
-            Please provide available stock.
+        <div class="d-flex gap-3">
+            <!-- <p>5 </p> <span>Packet</span> -->
+            <p>{{ selectedAvailableStock }}</p>
+            <span>{{ selectedUnit }}</span>
         </div>
     </div>
 

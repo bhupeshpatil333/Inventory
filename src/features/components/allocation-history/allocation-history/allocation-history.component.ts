@@ -1,3 +1,4 @@
+import { AllocationHistoryService } from './../services/allocation-history.service';
 import { Component } from '@angular/core';
 import { MaterialModule } from '../../../../shared/shared.module';
 import { CommonModule } from '@angular/common';
@@ -22,10 +23,9 @@ export class AllocationHistoryComponent {
   selectedDistrict = ''
   selectedFacility = ''
   searchText = ''
-  constructor(private router: Router, private itemService: ItemService, private facilityService: FacilityService, private districtService: DistrictService, private commonService: CommonService) { }
+  constructor(private router: Router, private itemService: ItemService, private facilityService: FacilityService, private districtService: DistrictService, private commonService: CommonService, private allocationService: AllocationHistoryService) { }
   async ngOnInit() {
     this.fetchAllocations();
-
     this.districts = await this.districtService.getDistrictData();
     this.facilities = await this.facilityService.getFacilitytData();
     this.items = await this.itemService.getItemData();
@@ -34,18 +34,39 @@ export class AllocationHistoryComponent {
 
   async fetchAllocations() {
     this.allocationsHistory = (await this.commonService.getAll('allocationHist')).map(alloc => {
-      const itemObj = this.items.find(i => i.key === alloc.item);
+      console.log('alloc: ', alloc);
+      const itemObj = this.items.find(i => i.key == alloc.item);
+      console.log('itemObj: ', itemObj);
       const districtObj = this.districts.find(d => d.key === alloc.district);
       const facilityObj = this.facilities.find(f => f.key === alloc.facility);
       return {
         ...alloc,
         itemName: itemObj?.name || 'N/A',
-        unit: itemObj?.unit || 'N/A',
-        districtName: districtObj?.name || alloc.district,
-        facilityName: facilityObj?.name || 'N/A',
+        brand: itemObj?.brand,
+        unit: itemObj?.unit || '',
+        containsPerUnit: itemObj?.containsPerUnit || '',
+        districtName: districtObj ? districtObj.name : alloc.district,
+        facilityName: facilityObj ? facilityObj.name : alloc.facility,
         allocateQuantity: alloc.allocateQuantity || 0
       };
     });
+    console.log('this.allocationsHistory: ', this.allocationsHistory);
+  }
+
+  getUnitConversion(item: any): { unit: string, containsPerUnit: string } {
+    switch (item.unit) {
+      case 'Packet':
+        return { unit: 'Packet', containsPerUnit: `${item.containsPerUnit} Pieces` };
+      case 'Litre':
+        return { unit: 'Litre', containsPerUnit: `${item.containsPerUnit} ml` };
+      case 'Kg':
+        return { unit: 'Kg', containsPerUnit: `${item.containsPerUnit} g` };
+      case 'Tablet':
+      case 'Pieces':
+        return { unit: item.unit, containsPerUnit: '-' }; // no conversion
+      default:
+        return { unit: item.unit, containsPerUnit: item.containsPerUnit };
+    }
   }
 
 
@@ -70,9 +91,9 @@ export class AllocationHistoryComponent {
         (allocationHist?.facility || '').toLowerCase().includes(search)
 
       const matchesDistrict =
-        !this.selectedDistrict || allocationHist.districtId === this.selectedDistrict;
+        !this.selectedDistrict || allocationHist.district === this.selectedDistrict;
       const matchesFacility =
-        !this.selectedFacility || allocationHist.name === this.selectedFacility;
+        !this.selectedFacility || allocationHist.facility === this.selectedFacility;
       return matchesSearch && matchesDistrict && matchesFacility;
     });
   }

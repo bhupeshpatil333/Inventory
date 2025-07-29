@@ -21,6 +21,8 @@ export class AllocationHistoryAddEditComponent implements OnInit {
   facilities: any[] = [];
   items: any[] = [];
   isEdit = history.state.isEdit || false;
+  selectedUnit: string = '';
+  selectedAvailableStock: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -35,7 +37,6 @@ export class AllocationHistoryAddEditComponent implements OnInit {
       district: [''],
       facility: [''],
       item: ['', Validators.required],
-      availableStock: [''],
       allocateQuantity: ['', [Validators.required, Validators.min(1)]]
     });
 
@@ -43,14 +44,29 @@ export class AllocationHistoryAddEditComponent implements OnInit {
 
   async ngOnInit() {
     const myData = history.state.data;
-    if (typeof (myData) !== 'undefined') {
-      this.allocationForm.patchValue(myData);
-    }
-
+    console.log('myData: ', myData);
     await this.loadDistricts();
     await this.loadFacilities();
 
     this.items = await this.itemService.getItemData();
+    if (typeof myData !== 'undefined') {
+      this.allocationForm.patchValue(myData);
+      // this is for Unit conversion
+      this.updateSelectedItemDetails(myData.item); // call AFTER items are loaded
+    }
+
+    // this is for Unit conversion
+    this.allocationForm.get('item')?.valueChanges.subscribe(itemKey => {
+      this.updateSelectedItemDetails(itemKey);
+    });
+  }
+
+  // this is for Unit conversion
+  updateSelectedItemDetails(itemKey: string) {
+    console.log('itemKey: ', itemKey);
+    const selectedItem = this.items.find(i => i.key === itemKey);
+    this.selectedUnit = selectedItem?.unit || '';
+    this.selectedAvailableStock = selectedItem?.containsPerUnit; // fallback if property missing
   }
 
   async loadDistricts() {

@@ -9,7 +9,7 @@
 
         <mat-form-field appearance="outline">
             <mat-label>District</mat-label>
-            <mat-select>
+            <mat-select [(ngModel)]="selectedDistrict">
                 <mat-option value="">All</mat-option>
                 <mat-option *ngFor="let item of districts" [value]="item.key">{{item.name}}</mat-option>
             </mat-select>
@@ -17,7 +17,7 @@
 
         <mat-form-field appearance="outline">
             <mat-label>Facility</mat-label>
-            <mat-select>
+            <mat-select [(ngModel)]="selectedFacility">
                 <mat-option value="">All</mat-option>
                 <mat-option *ngFor="let item of facilities" [value]="item.key">{{item.name}}</mat-option>
             </mat-select>
@@ -34,12 +34,12 @@
 
         <ng-container matColumnDef="item">
             <th mat-header-cell *matHeaderCellDef> Item </th>
-            <td mat-cell *matCellDef="let allocation">{{ allocation.item }}</td>
+            <td mat-cell *matCellDef="let allocation">{{ allocation.item }} {{allocation.brand}}</td>
         </ng-container>
 
         <ng-container matColumnDef="unit">
             <th mat-header-cell *matHeaderCellDef> Unit </th>
-            <td mat-cell *matCellDef="let allocation">{{ allocation.unit }}</td>
+            <td mat-cell *matCellDef="let allocation">{{ allocation.unit }} {{ allocation.containsPerUnit }}</td>
         </ng-container>
 
         <ng-container matColumnDef="district">
