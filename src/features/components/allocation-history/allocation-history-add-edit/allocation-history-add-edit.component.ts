@@ -51,6 +51,8 @@ export class AllocationHistoryAddEditComponent implements OnInit {
     this.items = await this.itemService.getItemData();
     if (typeof myData !== 'undefined') {
       this.allocationForm.patchValue(myData);
+
+
       // this is for Unit conversion
       this.updateSelectedItemDetails(myData.item); // call AFTER items are loaded
     }
@@ -80,12 +82,22 @@ export class AllocationHistoryAddEditComponent implements OnInit {
   onSubmit() {
     if (this.allocationForm.valid) {
       console.log(this.allocationForm.value);
+      const formValue = { ...this.allocationForm.value };
+
+      // Sirf relevant field ko hi rakho
+      if (formValue.allocationType === 'district') {
+        delete formValue.facility;  // Facility hatao
+      } else if (formValue.allocationType === 'facility') {
+        delete formValue.district;  // District hatao
+      }
+
+      console.log('Final form value: ', formValue);
 
       if (this.isEdit) {
-        this.commonService.update('allocationHist', history.state.data?.key, this.allocationForm.value);
+        this.commonService.update('allocationHist', history.state.data?.key, formValue);
         this.router.navigate(['dashboard/allocationHistory']);
       } else {
-        this.commonService.add('allocationHist', this.allocationForm.value);
+        this.commonService.add('allocationHist', formValue);
         this.router.navigate(['dashboard/allocationHistory']);
       }
 

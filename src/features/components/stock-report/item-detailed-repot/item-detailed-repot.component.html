@@ -1,0 +1,33 @@
+<div class="container mt-3">
+    <h2>Item Detailed Report</h2>
+
+    <table class="table table-bordered mt-3">
+        <thead class="table-light">
+            <tr>
+                <th>Date</th>
+                <th>Source</th>
+                <th>Destination</th>
+                <th>Type</th>
+                <th>Brand</th>
+                <th>Quantity</th>
+                <th>Stock Available (Source)</th>
+                <th>Stock Available (Destination)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let report of reportData">
+                <td>
+                    {{ report.date ? (report.date.toDate ? (report.date.toDate() | date: 'dd-MM-yyyy') : (report.date |
+                    date: 'dd-MM-yyyy')) : '' }}
+                </td>
+                <td>{{ report.source }}</td>
+                <td>{{ report.destination }}</td>
+                <td>{{ report.type }}</td>
+                <td>{{ report.brand }}</td>
+                <td>{{ report.quantity }}</td>
+                <td>{{ report.stockSource }}</td>
+                <td>{{ report.stockDestination }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

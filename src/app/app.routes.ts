@@ -37,6 +37,10 @@ export const routes: Routes = [
             {
                 path: 'allocationHistory',
                 loadChildren: () => import('../features/components/allocation-history/allocation-history.routes').then(m => m.allocationRoutes),
+            },
+            {
+                path: 'stockReport',
+                loadChildren: () => import('../features/components/stock-report/stock-report.routes').then(m => m.stockReportRoutes),
             }
 
         ]
