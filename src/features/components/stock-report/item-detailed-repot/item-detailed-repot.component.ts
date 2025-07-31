@@ -21,8 +21,10 @@ export class ItemDetailedRepotComponent implements OnInit {
 
 
   reportData: any[] = [];
+  reportRows: any[] = [];
   itemId: string = '';
   itemData: any;
+  item: any;
 
   fromDate = new Date();
   toDate = new Date();
@@ -36,53 +38,119 @@ export class ItemDetailedRepotComponent implements OnInit {
     private facilityService: FacilityService
   ) { }
 
+  // async ngOnInit() {
+  //   // await this.getStocks();
+  //   console.log('this.reportData: ', this.reportData);
+  //   await this.loadReport();
+  // }
+
+  // async loadReport() {
+  //   const item = history.state.data;
+  //   this.itemData = item;
+  //   this.itemId = item?.key;
+  //   console.log('this.itemId: ', this.itemId);
+
+  //   const from = this.fromDate.toISOString();
+  //   const to = this.toDate.toISOString();
+
+  //   const stockIns = await this.stockService.getStockData();
+  //   console.log('stockIns: ', stockIns);
+  //   const allocations = await this.allocationService.getData();
+
+  //   const filteredStockIns = stockIns.filter((s: any) => s.key === this.itemId);
+  //   console.log('filteredStockIns: ', filteredStockIns);
+
+  //   const filteredAllocations = allocations.filter((a: any) => a.key === this.itemId);
+
+  //   this.reportData = [
+  //     ...filteredStockIns.map((d: any) => ({
+  //       date: d.date,
+  //       source: d.source || 'Store',
+  //       destination: d.destination || 'District',
+  //       type: 'StockIn',
+  //       brand: d.brand,
+  //       quantity: d.quantity,
+  //       stockSource: d.quantity,
+  //       stockDestination: 0
+  //     })),
+  //     ...filteredAllocations.map((d: any) => ({
+  //       date: d.date,
+  //       source: d.district || 'District',
+  //       destination: d.facility || 'Facility',
+  //       type: 'StockOut',
+  //       brand: d.brand,
+  //       quantity: d.quantity,
+  //       stockSource: d.stockSource || 0,
+  //       stockDestination: d.stockDestination || 0
+  //     }))
+  //   ];
+  // }
+
+
+
+
   async ngOnInit() {
-    // await this.getStocks();
-    console.log('this.reportData: ', this.reportData);
-    await this.loadReport();
-  }
+    this.item = history.state.data;
+    console.log('Selected Item:', this.item);
 
-  async loadReport() {
-    const item = history.state.data;
-    this.itemData = item;
-    this.itemId = item?.key;
-    console.log('this.itemId: ', this.itemId);
-
-    const from = this.fromDate.toISOString();
-    const to = this.toDate.toISOString();
-
-    const stockIns = await this.stockService.getStockData();
-    console.log('stockIns: ', stockIns);
+    // Load data from services
+    const stockIn = await this.stockService.getStockData();
     const allocations = await this.allocationService.getData();
+    console.log('allocations: ', allocations);
+    const districts = await this.districtService.getDistrictData();
+    const facilities = await this.facilityService.getFacilitytData();
 
-    const filteredStockIns = stockIns.filter((s: any) => s.key === this.itemId);
-    console.log('filteredStockIns: ', filteredStockIns);
+    let runningStock = 0;
 
-    const filteredAllocations = allocations.filter((a: any) => a.key === this.itemId);
+    const stockRows = stockIn
+      .filter(s => s.key === this.item.key)
+      .sort((a, b) => a.dateOfEntry?.seconds - b.dateOfEntry?.seconds)
+      .map(s => {
+        runningStock += s.quantity;
+        return {
+          date: s.dateOfEntry?.seconds
+            ? new Date(s.dateOfEntry.seconds * 1000)
+            : (s.date ? new Date(s.date) : null),
+          type: 'StockIn',
+          brand: s.brand,
+          quantity: s.quantity,
+          source: 'Store In',
+          destination: 'Store In',
+          stockSource: 0,
+          stockDestination: runningStock
+        };
+      });
 
-    this.reportData = [
-      ...filteredStockIns.map((d: any) => ({
-        date: d.date,
-        source: d.source || 'Store',
-        destination: d.destination || 'District',
-        type: 'StockIn',
-        brand: d.brand,
-        quantity: d.quantity,
-        stockSource: d.quantity,
-        stockDestination: 0
-      })),
-      ...filteredAllocations.map((d: any) => ({
-        date: d.date,
-        source: d.district || 'District',
-        destination: d.facility || 'Facility',
-        type: 'StockOut',
-        brand: d.brand,
-        quantity: d.quantity,
-        stockSource: d.stockSource || 0,
-        stockDestination: d.stockDestination || 0
-      }))
-    ];
+    const allocationRows = allocations
+      .filter(a => a.item || a.item === this.item.key)
+      .sort((a, b) => a.dateOfEntry?.seconds - b.dateOfEntry?.seconds)
+      .map(a => {
+        const districtName = districts.find(d => d.key === a.district)?.name;
+        const facilityName = facilities.find(f => f.key === a.facility)?.name;
+
+        const source = 'Store';
+        const destination = facilityName || districtName || 'Unknown';
+        const qty = a.quantity || a.allocateQuantity || 0;
+        runningStock -= qty;
+
+        return {
+          date: a.dateOfEntry?.seconds
+            ? new Date(a.dateOfEntry.seconds * 1000).toLocaleDateString()
+            : (a.date ? new Date(a.date).toLocaleDateString() : 'N/A'),
+          type: a.type || 'StockOut',
+          brand: a.brand || 'N/A',
+          quantity: qty,
+          source,
+          destination,
+          stockSource: runningStock,
+          stockDestination: 0
+        };
+      });
+
+    this.reportRows = [...stockRows, ...allocationRows];
+
   }
+
 
 
 

@@ -42,6 +42,7 @@ export class StockReportComponent implements OnInit {
     })
   }
 
+
   getUnitConversion(stock: any): string {
     switch (stock.unit) {
       case 'Packet':
@@ -50,9 +51,6 @@ export class StockReportComponent implements OnInit {
         return `${stock.containsPerUnit} ml`;
       case 'Kg':
         return `${stock.containsPerUnit} g`;
-      case 'Tablet':
-      case 'Pieces':
-        return '-'; // no conversion
       default:
         return stock.containsPerUnit;
     }

@@ -37,9 +37,6 @@ export class StockInHistoryComponent implements OnInit {
         return `${stock.containsPerUnit} ml`;
       case 'Kg':
         return `${stock.containsPerUnit} g`;
-      case 'Tablet':
-      case 'Pieces':
-        return '-'; // no conversion
       default:
         return stock.containsPerUnit;
     }

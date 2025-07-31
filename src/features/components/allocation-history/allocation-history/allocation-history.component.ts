@@ -50,8 +50,51 @@ export class AllocationHistoryComponent {
         allocateQuantity: alloc.allocateQuantity || 0
       };
     });
+
+
     console.log('this.allocationsHistory: ', this.allocationsHistory);
   }
+
+  // async fetchAllocations() {
+  //   const rawAllocations = await this.commonService.getAll('allocationHist');
+  //   console.log('rawAllocations: ', rawAllocations);
+
+  //   const mappedAllocations = rawAllocations.map(alloc => {
+  //     const itemObj = this.items.find(i => i.key == alloc.item);
+  //     const districtObj = this.districts.find(d => d.key === alloc.district);
+  //     const facilityObj = this.facilities.find(f => f.key === alloc.facility);
+  //     return {
+  //       ...alloc,
+  //       itemName: itemObj?.name || 'N/A',
+  //       brand: itemObj?.brand,
+  //       unit: itemObj?.unit || '',
+  //       containsPerUnit: itemObj?.containsPerUnit || '',
+  //       districtName: districtObj ? districtObj.name : alloc.district,
+  //       facilityName: facilityObj ? facilityObj.name : alloc.facility,
+  //       allocateQuantity: alloc.allocateQuantity || 0
+  //     };
+  //   });
+
+  //   // Remove duplicates and sum quantities using filter + findIndex
+  //   this.allocationsHistory = mappedAllocations.filter((obj, index, self) => {
+  //     const firstIndex = self.findIndex(o =>
+  //       o.item === obj.item &&
+  //       o.district === obj.district &&
+  //       o.facility === obj.facility
+  //     );
+
+  //     if (firstIndex !== index) {
+  //       // Duplicate: add quantity to the first one
+  //       self[firstIndex].allocateQuantity += obj.allocateQuantity;
+  //       return false; // Skip this duplicate
+  //     }
+
+  //     return true; // Keep unique
+  //   });
+
+  //   console.log('this.allocationsHistory:', this.allocationsHistory);
+  // }
+
 
   getUnitConversion(item: any): { unit: string, containsPerUnit: string } {
     switch (item.unit) {
