@@ -23,16 +23,9 @@ export class FacilityAddEditComponent {
   hide = true;
   states: string[] = ['Maharashtra', 'Gujarat', 'Rajasthan']; // or fetch from API
   facilityType = [
-    { key: 'hospital', name: 'Hospital' },
-    { key: 'clinic', name: 'Clinic' },
-    { key: 'chc', name: 'CHC (Community Health Center)' },
-    { key: 'phc', name: 'PHC (Primary Health Center)' },
-    { key: 'sub-center', name: 'Sub Center' },
-    { key: 'dispensary', name: 'Dispensary' },
-    { key: 'health-post', name: 'Health Post' },
-    { key: 'nursing-home', name: 'Nursing Home' },
-    { key: 'private-facility', name: 'Private Facility' },
-    { key: 'mmu', name: 'Mobile Medical Unit' }
+    // replace with ecg and x-ray type
+    { key: 'ecg', name: 'ECG' },
+    { key: 'x-ray', name: 'X-Ray' }
   ];
 
   constructor(private fb: FormBuilder, private route: ActivatedRoute, private facilityService: FacilityService, private toast: ToastService, private districtService: DistrictService,
@@ -90,5 +83,14 @@ export class FacilityAddEditComponent {
       this.router.navigate(['dashboard/facility']);
     }
   }
+
+  get combinedBlockType(): string {
+    const block = this.form.get('block')?.value;
+    const typeKey = this.form.get('type')?.value;
+    const typeName = this.facilityType.find(t => t.key === typeKey)?.name || '';
+    return block && typeName ? `${block} - ${typeName}` : '';
+  }
+
+
 
 }

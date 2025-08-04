@@ -20,8 +20,8 @@ export class HeaderComponent {
   showBackButton = false; // 👈 flag for back button
   isFormDirty: boolean = true; // ✅ manually set dirty state
 
-  constructor(private breakpointObserver: BreakpointObserver, private dialog: MatDialog, private location: Location,
-    private titleStrategy: TitleStrategy, private router: Router, private route: ActivatedRoute, private dirtyCheck: DirtyCheckService) {
+  constructor(private location: Location,
+    private titleStrategy: TitleStrategy, private router: Router, private dirtyCheck: DirtyCheckService) {
     // changing routing names 
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -64,4 +64,6 @@ export class HeaderComponent {
       this.location.back();
     }
   }
+
+
 }

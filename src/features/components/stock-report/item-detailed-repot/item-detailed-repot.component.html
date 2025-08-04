@@ -1,6 +1,24 @@
 <div class="container mt-3">
     <h2>Item Detailed Report</h2>
 
+    <div class="flex items-center gap-4 my-4">
+        <mat-form-field appearance="outline">
+            <mat-label>From Date</mat-label>
+            <input matInput [matDatepicker]="picker1" [(ngModel)]="fromDate" />
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>To Date</mat-label>
+            <input matInput [matDatepicker]="picker2" [(ngModel)]="toDate" />
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+    </div>
+
+
+
     <table class="table table-bordered mt-3">
         <thead class="table-light">
             <tr>
@@ -16,8 +34,8 @@
         </thead>
         <tbody>
             <!-- <tr *ngFor="let report of reportData"> -->
-            <tr *ngFor="let report of reportRows">
-                <td>1234</td>
+            <tr *ngFor="let report of filteredData">
+                <td>1234 {{report.date}}</td>
                 <td>{{ report.source }}</td>
                 <td>{{ report.destination }}</td>
                 <td>{{ report.type }}</td>

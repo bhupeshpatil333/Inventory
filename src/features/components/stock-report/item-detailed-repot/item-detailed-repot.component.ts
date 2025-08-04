@@ -9,6 +9,7 @@ import { DistrictService } from '../../../../shared/district.service';
 import { FacilityService } from '../../facility/facility.service';
 import { AllocationHistoryService } from '../../allocation-history/services/allocation-history.service';
 import { CommonService } from '../../../../shared/services/common.service';
+import moment from 'moment';
 
 @Component({
   selector: 'app-item-detailed-repot',
@@ -26,8 +27,8 @@ export class ItemDetailedRepotComponent implements OnInit {
   itemData: any;
   item: any;
 
-  fromDate = new Date();
-  toDate = new Date();
+  fromDate: Date | null = null;
+  toDate: Date | null = null;
 
   constructor(
     private itemService: ItemService,
@@ -151,6 +152,22 @@ export class ItemDetailedRepotComponent implements OnInit {
 
   }
 
+
+  // ✅ Getter — automatically returns filtered data
+  get filteredData(): any[] {
+    if (!this.fromDate && !this.toDate) return this.reportRows;
+
+    const from = this.fromDate ? moment(this.fromDate).startOf('day') : null;
+    const to = this.toDate ? moment(this.toDate).endOf('day') : null;
+
+    return this.reportRows.filter(row => {
+      const rowDate = moment(row.date, 'DD/MM/YYYY'); // Match format if needed
+
+      if (from && rowDate.isBefore(from)) return false;
+      if (to && rowDate.isAfter(to)) return false;
+      return true;
+    });
+  }
 
 
 

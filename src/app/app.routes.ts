@@ -3,6 +3,8 @@ import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 import { authGuard } from './core/guard/auth.guard';
 import { loginGuard } from './core/guard/login.guard';
 import { DistrictComponent } from '../features/components/district/district.component';
+import { EcgConsumptionReportComponent } from '../features/components/ecg-consumption-report/ecg-consumption-report.component';
+import { EmployeeAttendenceComponent } from '../features/components/employee-attendence/employee-attendence/employee-attendence.component';
 
 export const routes: Routes = [
     {
@@ -41,7 +43,15 @@ export const routes: Routes = [
             {
                 path: 'stockReport',
                 loadChildren: () => import('../features/components/stock-report/stock-report.routes').then(m => m.stockReportRoutes),
-            }
+            },
+            {
+                path: 'ecg-report',
+                component: EcgConsumptionReportComponent
+            },
+            {
+                path: 'emp-report/:id',
+                component: EmployeeAttendenceComponent
+            },
 
         ]
     },

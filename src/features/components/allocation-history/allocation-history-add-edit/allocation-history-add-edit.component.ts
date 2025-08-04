@@ -23,6 +23,7 @@ export class AllocationHistoryAddEditComponent implements OnInit {
   isEdit = history.state.isEdit || false;
   selectedUnit: string = '';
   selectedAvailableStock: number = 0;
+  initialFormValue: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -48,13 +49,16 @@ export class AllocationHistoryAddEditComponent implements OnInit {
     await this.loadDistricts();
     await this.loadFacilities();
 
+
     this.items = await this.itemService.getItemData();
     if (typeof myData !== 'undefined') {
       this.allocationForm.patchValue(myData);
 
 
-      // this is for Unit conversion
-      this.updateSelectedItemDetails(myData.item); // call AFTER items are loaded
+      // ✅ Store initial form state
+      this.initialFormValue = JSON.stringify(this.allocationForm.getRawValue());
+      console.log('Initial Form Value:', this.initialFormValue);
+
     }
 
     // this is for Unit conversion
@@ -62,6 +66,13 @@ export class AllocationHistoryAddEditComponent implements OnInit {
       this.updateSelectedItemDetails(itemKey);
     });
   }
+
+  isFormChanged(): boolean {
+    const currentValue = JSON.stringify(this.allocationForm.getRawValue());
+    console.log('Current Form Value:', currentValue);
+    return currentValue !== this.initialFormValue;
+  }
+
 
   // this is for Unit conversion
   updateSelectedItemDetails(itemKey: string) {

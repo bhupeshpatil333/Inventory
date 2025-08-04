@@ -29,6 +29,15 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Block + Type</mat-label>
+        <mat-select [value]="combinedBlockType">
+            <mat-option [value]="combinedBlockType">{{ combinedBlockType }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+
+
+    <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>Latitude</mat-label>
         <input matInput formControlName="latitude" />
     </mat-form-field>
