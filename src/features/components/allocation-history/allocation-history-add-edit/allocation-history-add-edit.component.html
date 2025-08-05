@@ -34,7 +34,7 @@
         </mat-select>
     </div>
 
-    <div class="mb-3 d-flex gap-3">
+    <div class="mb-3 d-flex gap-3" *ngIf="allocationForm.get('item')?.value">
         <label for="availableStock" class="form-label">Available Stock</label>
         <div class="d-flex gap-3">
             <!-- <p>5 </p> <span>Packet</span> -->

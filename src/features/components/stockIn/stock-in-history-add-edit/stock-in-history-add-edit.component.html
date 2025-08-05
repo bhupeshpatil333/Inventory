@@ -16,7 +16,7 @@
 
     <mat-form-field appearance="outline" class="w-full">
         <mat-label>Date of Entry</mat-label>
-        <input matInput [matDatepicker]="entryPicker" formControlName="dateOfEntry">
+        <input matInput [matDatepicker]="entryPicker" formControlName="dateOfEntry" [max]="today">
         <mat-datepicker-toggle matSuffix [for]="entryPicker"></mat-datepicker-toggle>
         <mat-datepicker #entryPicker></mat-datepicker>
     </mat-form-field>

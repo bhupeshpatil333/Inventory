@@ -39,18 +39,22 @@
 
     <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>Latitude</mat-label>
-        <input matInput formControlName="latitude" />
+        <input matInput formControlName="latitude" type="number" (input)="onNumberInput('latitude')"
+            (keydown)="preventMinus($event)" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>Longitude</mat-label>
-        <input matInput formControlName="longitude" />
+        <input matInput formControlName="longitude" type="number" (input)="onNumberInput('longitude')"
+            (keydown)="preventMinus($event)" />
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="w-full mb-4">
+    <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>Geo Fencing Radius</mat-label>
-        <input matInput formControlName="geoRadius" />
+        <input matInput formControlName="geoRadius" type="number" (input)="onNumberInput('geoRadius')"
+            (keydown)="preventMinus($event)" />
     </mat-form-field>
+
 
     <h2 class="mt-6">Employee Demographic Details</h2>
 

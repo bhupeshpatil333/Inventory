@@ -19,6 +19,8 @@ export class StockInHistoryAddEditComponent {
   items: any[] = [];
   selectedItem: any = null;
   isEdit = false;
+  today = new Date();
+
 
   constructor(
     private fb: FormBuilder,

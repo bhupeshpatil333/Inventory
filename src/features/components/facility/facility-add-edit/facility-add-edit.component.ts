@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MaterialModule } from '../../../../shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,7 +21,7 @@ export class FacilityAddEditComponent {
   form!: FormGroup;
   facilityId: string | null = null;
   hide = true;
-  states: string[] = ['Maharashtra', 'Gujarat', 'Rajasthan']; // or fetch from API
+  states: string[] = ['Maharashtra', 'Gujarat', 'Rajasthan', 'Madhya Pradesh', 'Uttar Pradesh', 'Tamil Nadu', 'Kerala']; // or fetch from API
   facilityType = [
     // replace with ecg and x-ray type
     { key: 'ecg', name: 'ECG' },
@@ -36,7 +36,7 @@ export class FacilityAddEditComponent {
       block: [''],
       type: [''],
       latitude: [''],
-      longitude: [''],
+      longitude: ['', Validators.required],
       geoRadius: [''],
       employeeCode: [''],
       firstName: [''],
@@ -71,6 +71,20 @@ export class FacilityAddEditComponent {
       this.form.patchValue(this.facilityData);
     }
   }
+
+  onNumberInput(controlName: string) {
+    const value = +this.form.get(controlName)?.value;
+    if (value < 0) {
+      this.form.get(controlName)?.setValue(0);
+    }
+  }
+  preventMinus(event: KeyboardEvent) {
+    if (event.key === '-' || event.key === 'Minus') {
+      event.preventDefault();
+    }
+  }
+
+
 
   submit() {
     if (this.isEdit) {
