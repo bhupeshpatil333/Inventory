@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, deleteDoc, doc, docData, Firestore, updateDoc } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, deleteDoc, doc, docData, Firestore, orderBy, updateDoc, getDoc, getDocs, onSnapshot, query, where } from '@angular/fire/firestore';
 import { District } from '../features/components/district/district.interface';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { getDoc, getDocs, onSnapshot } from 'firebase/firestore';
+// import { getDoc, getDocs, onSnapshot, query, where } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -37,13 +37,29 @@ export class DistrictService {
   }
 
   // not realtime DB
+  // getDistrictData(): Promise<any[]> {
+  //   return getDocs(this.getCollection()).then((res) => {
+  //     const result = res.docs.map((doc) => ({
+  //       key: doc.id,
+  //       ...doc.data()
+  //     }));
+  //     return result;
+  //   });
+  // }
+
   getDistrictData(): Promise<any[]> {
-    return getDocs(this.getCollection()).then((res) => {
-      const result = res.docs.map((doc) => ({
-        key: doc.id,
-        ...doc.data()
-      }));
-      return result;
+    const q = query(
+      this.getCollection(),
+      orderBy('updatedAt', 'desc') // Only use orderBy
+    );
+
+    return getDocs(q).then((res) => {
+      return res.docs
+        .map((doc) => ({
+          key: doc.id,
+          ...doc.data()
+        }))
+        .filter((item: any) => item.isDelete !== true); // ✅ Filter deleted items
     });
   }
 
@@ -59,18 +75,35 @@ export class DistrictService {
     });
   }
 
-  addDistrict(district: District) {
-    return addDoc(this.getCollection(), district);
+  addDistrict(district: any) {
+    const timestamp = new Date();
+
+    const districtWithTimestamps = {
+      ...district,
+      createdAt: timestamp,
+      updatedAt: timestamp
+    };
+
+    return addDoc(this.getCollection(), districtWithTimestamps);
   }
+
 
   updateDistrict(id: string, district: District) {
     const docRef = doc(this.firestore, `districts/${id}`);
-    return updateDoc(docRef, { ...district });
+    return updateDoc(docRef, { ...district, createdAt: Date.now(), updatedAt: new Date() });
   }
+
+  // deleteDistrict(id: string) {
+  //   const docRef = doc(this.firestore, `districts/${id}`);
+  //   return deleteDoc(docRef);
+  // }
 
   deleteDistrict(id: string) {
     const docRef = doc(this.firestore, `districts/${id}`);
-    return deleteDoc(docRef);
+    return updateDoc(docRef, {
+      isDelete: true,
+      deletedAt: Date.now(),
+    });
   }
 
 }

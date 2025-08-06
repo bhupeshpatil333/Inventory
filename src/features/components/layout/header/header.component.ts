@@ -52,18 +52,32 @@ export class HeaderComponent {
   }
 
 
+  // goBack() {
+  //   if (this.isFormDirty) {
+  //     const confirmed = window.confirm('You have unsaved changes. Do you really want to go back?');
+  //     if (confirmed) {
+  //       this.dirtyCheck.isDirty = false; // reset dirty flag
+  //       this.location.back(); // Navigate back
+  //     }
+  //     // else: stay on page
+  //   } else {
+  //     this.location.back();
+  //   }
+  // }
+
+  // Confirm navigation away from unsaved changes
   goBack() {
-    if (this.isFormDirty) {
-      const confirmed = window.confirm('You have unsaved changes. Do you really want to go back?');
-      if (confirmed) {
-        this.dirtyCheck.isDirty = false; // reset dirty flag
-        this.location.back(); // Navigate back
-      }
-      // else: stay on page
-    } else {
-      this.location.back();
+    const initial = history.state.initialFormValue;
+    const current = history.state.currentFormValue;
+
+    if (initial && current && current !== initial) {
+      const confirmLeave = confirm('You have unsaved changes. Do you want to go back?');
+      if (!confirmLeave) return;
     }
+
+    this.location.back();
   }
+
 
 
 }

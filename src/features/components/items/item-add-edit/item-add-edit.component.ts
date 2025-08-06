@@ -13,6 +13,8 @@ import { ItemService } from '../service/item.service';
   styleUrl: './item-add-edit.component.scss'
 })
 export class ItemAddEditComponent {
+  initialFormValue: string = '';
+
   itemForm!: FormGroup;
   itemsData: any;
   isEdit = false;
@@ -28,6 +30,15 @@ export class ItemAddEditComponent {
 
   }
 
+  // This method is called whenever the form value changes
+  ngDoCheck(): void {
+    const currentValue = JSON.stringify(this.itemForm.value);
+    console.log('currentValue: ', currentValue);
+    history.replaceState({ ...history.state, currentFormValue: currentValue }, '');
+  }
+
+
+
   ngOnInit(): void {
     this.isEdit = history.state.isEdit;
     this.itemsData = history.state.data;
@@ -36,13 +47,11 @@ export class ItemAddEditComponent {
       this.itemForm.patchValue(this.itemsData);
     }
 
-    // if (typeof (history.state.data.key) !== 'undefined') {
-    //   this.isEdit = true;
-    //   console.log('this.itemId: ', history.state.data.key);
+    // this is the initial value
+    const initialValue = JSON.stringify(this.itemForm.value);
+    console.log('initialValue: ', initialValue);
+    history.replaceState({ ...history.state, initialFormValue: initialValue }, '');
 
-    //   this.itemForm.patchValue(history.state.data);
-
-    // }
   }
 
   submit(): void {
