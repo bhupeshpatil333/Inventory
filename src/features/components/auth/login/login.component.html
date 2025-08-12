@@ -8,22 +8,14 @@
     <h3>Login</h3>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <mat-form-field appearance="outline" class="full-width">
+      <mat-form-field appearance="outline" class="full-width curved-input">
         <mat-label>Email</mat-label>
-        <input
-          matInput
-          formControlName="email"
-          placeholder="Enter your email"
-        />
+        <input matInput formControlName="email" placeholder="Enter your email" />
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Password</mat-label>
-        <input
-          matInput
-          [type]="hide ? 'password' : 'text'"
-          formControlName="password"
-        />
+        <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" />
         <button mat-icon-button matSuffix (click)="hide = !hide" type="button">
           <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
         </button>

@@ -28,23 +28,23 @@ export class authGuard implements CanActivate {
           return true;
         }
 
-        if (pathName === 'dashboard') {
-          if (!user) {
-            this.router.navigate(['/login']);
-            return false;
-          }
-          // ✅ Get claims
-          const claims = await this.authService.getUserClaims();
-          let role = claims?.['role'];
-          console.log('Claims in guard:', claims);
-          if (role === 'facility' || role === 'district') {
-            return true; // allow access
-          } else {
-            await this.authService.logout();
-            this.router.navigate(['/login']);
-            return false;
-          }
-        }
+        // if (pathName === 'dashboard') {
+        //   if (!user) {
+        //     this.router.navigate(['/login']);
+        //     return false;
+        //   }
+        //   // ✅ Get claims
+        //   const claims = await this.authService.getUserClaims();
+        //   let role = claims?.['role'];
+        //   console.log('Claims in guard:', claims);
+        //   if (role === 'facility' || role === 'district') {
+        //     return true; // allow access
+        //   } else {
+        //     await this.authService.logout();
+        //     this.router.navigate(['/login']);
+        //     return false;
+        //   }
+        // }
         // Allow other routes
         return true;
       })

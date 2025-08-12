@@ -13,7 +13,8 @@ import {
   serverTimestamp,
   query,
   orderBy,
-  where
+  where,
+  setDoc
 } from '@angular/fire/firestore';
 
 @Injectable({
@@ -22,6 +23,14 @@ import {
 export class CommonService {
 
   constructor(private firestore: Firestore) { }
+
+  async createUserWithRole(uid: string, email: string, role: string) {
+    await setDoc(doc(this.firestore, "users", uid), {
+      email: email,
+      role: role,
+      createdAt: new Date()
+    });
+  }
 
   // 🔗 Get collection reference
   private getCollectionRef(collectionName: string): CollectionReference<DocumentData> {
