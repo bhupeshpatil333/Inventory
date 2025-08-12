@@ -23,7 +23,7 @@
         <span class="color-white">items</span>
     </a>
 
-    <a mat-list-item routerLink="/dashboard/stockIn" routerLinkActive="active-link">
+    <a *ngIf="email=='test123@gmail.com'" mat-list-item routerLink="/dashboard/stockIn" routerLinkActive="active-link">
         <mat-icon class="color-white">folder</mat-icon>
         <span class="color-white">stockIn</span>
     </a>

@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, OnInit } from '@angular/core';
 import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, User, onAuthStateChanged } from '@angular/fire/auth';
 import { list, push } from '@angular/fire/database';
 import { Router } from '@angular/router';
@@ -50,4 +50,15 @@ export class AuthService {
     return this.auth.signOut().then(() => this.router.navigate(['/login']));
   }
 
+  async getUserClaims() {
+    let user = this.auth.currentUser;
+    if (!user) {
+      throw new Error("No user signed in");
+    }
+    // Always refresh the ID token to ensure latest claims
+    const idTokenResult = await user.getIdTokenResult(true);
+    // Claims are here
+    console.log("Custom Claims:", idTokenResult.claims);
+    return idTokenResult.claims; // e.g. { role: 'admin', ... }
+  }
 }
