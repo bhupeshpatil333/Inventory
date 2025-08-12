@@ -33,13 +33,23 @@ export class StockInHistoryAddEditComponent {
     });
   }
 
-  async ngOnInit(): Promise<void> {
-    this.items = await this.itemService.getItemData();
-    this.items.sort((a, b) => a.name.localeCompare(b.name));
+  async ngOnInit() {
+    this.itemService.getItemDataRealtime().subscribe((items: any[]) => {
+      this.items = items;
+      console.log('this.items: ', this.items);
+      this.items.sort((a, b) => a.name.localeCompare(b.name));
+    });
     this.isEdit = !!history.state.isEdit;
+
+
     if (this.isEdit && history.state.data) {
-      this.stockForm.patchValue(history.state.data);
+      const data = history.state.data;
+      console.log('data: ', data);
+      this.stockForm.patchValue({
+        ...data,
+      });
     }
+
   }
 
 

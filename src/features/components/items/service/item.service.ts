@@ -17,14 +17,14 @@ export class ItemService {
   }
 
   // 🔁 Real-time updates
-  // getItemDataRealtime(): Observable<any[]> {
-  //   const colRef = this.getCollection();
-  //   return new Observable<any[]>(observer =>
-  //     onSnapshot(colRef, snapshot =>
-  //       observer.next(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
-  //     )
-  //   );
-  // }
+  getItemDataRealtime(): Observable<any[]> {
+    const colRef = this.getCollection();
+    return new Observable<any[]>(observer =>
+      onSnapshot(colRef, snapshot =>
+        observer.next(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
+      )
+    );
+  }
 
   // 📦 Get all items (one-time fetch)
   getItemData(): Promise<any[]> {

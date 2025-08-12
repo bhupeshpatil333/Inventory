@@ -26,7 +26,7 @@ export class StockInHistoryComponent implements OnInit {
 
   async ngOnInit() {
 
-    this.getStocks();
+    await this.getStocks();
   }
 
   getUnitConversion(stock: any): string {

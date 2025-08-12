@@ -12,7 +12,8 @@ import {
   DocumentData,
   serverTimestamp,
   query,
-  orderBy
+  orderBy,
+  where
 } from '@angular/fire/firestore';
 
 @Injectable({
@@ -25,6 +26,16 @@ export class CommonService {
   // 🔗 Get collection reference
   private getCollectionRef(collectionName: string): CollectionReference<DocumentData> {
     return collection(this.firestore, collectionName);
+  }
+
+  // get year data
+  getYearData(collectionName: any, year: number) {
+    return getDocs(query(this.getCollectionRef(collectionName), where('year', '==', year))).then((res) => {
+      return res.docs.map((doc) => ({
+        key: doc.id,
+        ...doc.data()
+      })) as any[]; // <-- isse months property aa jayegi
+    });
   }
 
   // 📦 Get all documents ordered by createdAt DESC

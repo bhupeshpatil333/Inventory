@@ -5,6 +5,7 @@ import { loginGuard } from './core/guard/login.guard';
 import { DistrictComponent } from '../features/components/district/district.component';
 import { EcgConsumptionReportComponent } from '../features/components/ecg-consumption-report/ecg-consumption-report.component';
 import { EmployeeAttendenceComponent } from '../features/components/employee-attendence/employee-attendence/employee-attendence.component';
+import { WorkSettingsComponent } from '../features/components/work-settings/work-settings.component';
 
 export const routes: Routes = [
     {
@@ -47,6 +48,10 @@ export const routes: Routes = [
             {
                 path: 'ecg-report',
                 component: EcgConsumptionReportComponent
+            },
+            {
+                path: 'workSettings',
+                component: WorkSettingsComponent
             },
             {
                 path: 'emp-report/:id',
