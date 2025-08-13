@@ -1,6 +1,12 @@
-<h2 mat-dialog-title>{{ data.title || "Confirm" }}</h2>
-<mat-dialog-content>{{ data.message || "Are you sure?" }}</mat-dialog-content>
+<h2 mat-dialog-title>{{ data.title || 'Confirm' }}</h2>
+
+<mat-dialog-content>
+  <p>{{ data.message }}</p>
+</mat-dialog-content>
+
 <mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-button color="warn" (click)="onConfirm()">Yes</button>
+  <button *ngFor="let btn of data.buttons || [{ text: 'OK', value: true }]" mat-raised-button [ngClass]="btn.class"
+    [ngStyle]="btn.style ? { backgroundColor: btn.style, color: '#fff' } : {}" (click)="onClick(btn.value)">
+    {{ btn.text }}
+  </button>
 </mat-dialog-actions>

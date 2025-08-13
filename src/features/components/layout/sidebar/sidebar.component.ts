@@ -38,7 +38,11 @@ export class SidebarComponent implements OnInit {
       width: '300px',
       data: {
         title: 'Logout',
-        message: 'Are you sure you want to logout?'
+        message: 'Are you sure you want to logout?',
+        buttons: [
+          { text: 'Cancel', value: false, class: 'btn-gray' },
+          { text: 'Logout', value: true, class: 'btn-red' }
+        ]
       }
     });
 
@@ -48,4 +52,5 @@ export class SidebarComponent implements OnInit {
       }
     });
   }
+
 }
