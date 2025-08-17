@@ -16,6 +16,9 @@ import { ItemService } from '../../items/service/item.service';
   styleUrl: './allocation-history.component.scss'
 })
 export class AllocationHistoryComponent {
+  sortColumn: string = '';
+  sortDirection: '' | 'asc' | 'desc' = '';
+
   allocationsHistory: any[] = [];
   districts: any[] = [];
   facilities: any[] = [];
@@ -127,11 +130,11 @@ export class AllocationHistoryComponent {
 
   get filteredData() {
     const search = (this.searchText || '').toLowerCase();
-    return this.allocationsHistory.filter((allocationHist: any) => {
+    let filtered = this.allocationsHistory.filter((allocationHist: any) => {
       const matchesSearch =
         (allocationHist?.item || '').toLowerCase().includes(search) ||
         (allocationHist?.district || '').toLowerCase().includes(search) ||
-        (allocationHist?.facility || '').toLowerCase().includes(search)
+        (allocationHist?.facility || '').toLowerCase().includes(search);
 
       const matchesDistrict =
         !this.selectedDistrict || allocationHist.district === this.selectedDistrict;
@@ -139,5 +142,51 @@ export class AllocationHistoryComponent {
         !this.selectedFacility || allocationHist.facility === this.selectedFacility;
       return matchesSearch && matchesDistrict && matchesFacility;
     });
+
+    // Sorting logic
+    if (this.sortColumn) {
+      filtered = filtered.slice().sort((a, b) => {
+        let aValue = a[this.sortColumn];
+        let bValue = b[this.sortColumn];
+        // For date, use getDisplayDate for comparison
+        if (this.sortColumn === 'createdAt') {
+          aValue = this.getDisplayDate(aValue);
+          bValue = this.getDisplayDate(bValue);
+        }
+        if (aValue == null) return 1;
+        if (bValue == null) return -1;
+        if (aValue > bValue) return this.sortDirection === 'asc' ? 1 : -1;
+        if (aValue < bValue) return this.sortDirection === 'asc' ? -1 : 1;
+        return 0;
+      });
+    }
+    return filtered;
+  }
+  // Converts Firestore Timestamp or other date-like objects to JS Date for display
+  getDisplayDate(date: any): Date | null {
+    if (!date) return null;
+    if (date.toDate) return date.toDate();
+    if (date instanceof Date) return date;
+    // Try to parse string or number
+    return new Date(date);
+  }
+  sortData(column: string) {
+    if (this.sortColumn !== column) {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    } else {
+      if (this.sortDirection === 'asc') {
+        this.sortDirection = 'desc';
+      } else if (this.sortDirection === 'desc') {
+        this.sortDirection = '';
+        this.sortColumn = '';
+      } else {
+        this.sortDirection = 'asc';
+      }
+    }
+  }
+
+  getSortDirection(column: string): '' | 'asc' | 'desc' {
+    return this.sortColumn === column ? this.sortDirection : '';
   }
 }

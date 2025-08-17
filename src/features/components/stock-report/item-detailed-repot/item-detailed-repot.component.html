@@ -22,7 +22,19 @@
     <table class="table table-bordered mt-3">
         <thead class="table-light">
             <tr>
-                <th>Date</th>
+                <th (click)="sortData('date')">
+                    Date
+
+                    <img *ngIf="getSortDirection('date') === ''"
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNTU2Z8O9KksXt0lO2AFMWNxxEHu3-yGnc0Q&s"
+                        class="sort-icon">
+                    <img *ngIf="getSortDirection('date') === 'asc'"
+                        src="https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/c6/sort-ascending-zwkqgtah0x8a9l4xilhz6s.png/sort-ascending-g3f9ppc9kfek7e3e1l37p.png?_a=DATAg1AAZAA0"
+                        class="sort-icon">
+                    <img *ngIf="getSortDirection('date') === 'desc'"
+                        src="https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/c6/sort-ascending-zwkqgtah0x8a9l4xilhz6s.png/sort-ascending-g3f9ppc9kfek7e3e1l37p.png?_a=DATAg1AAZAA0"
+                        class="sort-icon">
+                </th>
                 <th>Source</th>
                 <th>Destination</th>
                 <th>Type</th>
@@ -33,9 +45,13 @@
             </tr>
         </thead>
         <tbody>
-            <!-- <tr *ngFor="let report of reportData"> -->
             <tr *ngFor="let report of filteredData">
-                <td>1234 {{report.date}}</td>
+                <td>
+                    <ng-container *ngIf="report.date && report.date !== 'N/A'; else notAvailable">
+                        {{ report.date | date:'dd/MM/yyyy' }}
+                    </ng-container>
+                    <ng-template #notAvailable>N/A</ng-template>
+                </td>
                 <td>{{ report.source }}</td>
                 <td>{{ report.destination }}</td>
                 <td>{{ report.type }}</td>
@@ -46,4 +62,6 @@
             </tr>
         </tbody>
     </table>
+
+
 </div>

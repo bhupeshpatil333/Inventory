@@ -28,8 +28,21 @@
 
     <table mat-table [dataSource]="filteredData">
         <ng-container matColumnDef="date">
-            <th mat-header-cell *matHeaderCellDef> Date </th>
-            <td mat-cell *matCellDef="let allocation">{{ allocation.date }}</td>
+            <th mat-header-cell *matHeaderCellDef (click)="sortData('createdAt')">
+                Date
+                <img *ngIf="getSortDirection('createdAt') === ''"
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYhIvmdGhrgb2MG6aKSW4HqqQKkldYfRAPWw&s"
+                    class="sort-icon">
+                <img *ngIf="getSortDirection('createdAt') === 'asc'"
+                    src="https://www.iconpacks.net/icons/3/free-sorting-icon-6615-thumb.png" alt="Sort Asc"
+                    class="sort-icon">
+                <img *ngIf="getSortDirection('createdAt') === 'desc'"
+                    src="https://cdn1.iconfinder.com/data/icons/heroicons-solid/20/sort-descending-512.png"
+                    alt="Sort Desc" class="sort-icon">
+            </th>
+            <td mat-cell *matCellDef="let allocation">
+                {{ getDisplayDate(allocation.createdAt) | date: 'd MMMM, y, h:mm a' }}
+            </td>
         </ng-container>
 
         <ng-container matColumnDef="item">
@@ -69,6 +82,7 @@
         <tr mat-row *matRowDef="let row; columns: ['date', 'item', 'unit', 'district', 'facility', 'qty', 'actions']">
         </tr>
     </table>
+
 
 
 </div>

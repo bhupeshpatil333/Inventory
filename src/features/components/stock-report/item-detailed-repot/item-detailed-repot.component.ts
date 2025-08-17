@@ -20,11 +20,11 @@ import moment from 'moment';
 })
 export class ItemDetailedRepotComponent implements OnInit {
 
+  // newly added:
+  sortColumn: string = '';
+  sortDirection: string = '';
 
-  reportData: any[] = [];
   reportRows: any[] = [];
-  itemId: string = '';
-  itemData: any;
   item: any;
 
   fromDate: Date | null = null;
@@ -38,56 +38,6 @@ export class ItemDetailedRepotComponent implements OnInit {
     private districtService: DistrictService,
     private facilityService: FacilityService
   ) { }
-
-  // async ngOnInit() {
-  //   // await this.getStocks();
-  //   console.log('this.reportData: ', this.reportData);
-  //   await this.loadReport();
-  // }
-
-  // async loadReport() {
-  //   const item = history.state.data;
-  //   this.itemData = item;
-  //   this.itemId = item?.key;
-  //   console.log('this.itemId: ', this.itemId);
-
-  //   const from = this.fromDate.toISOString();
-  //   const to = this.toDate.toISOString();
-
-  //   const stockIns = await this.stockService.getStockData();
-  //   console.log('stockIns: ', stockIns);
-  //   const allocations = await this.allocationService.getData();
-
-  //   const filteredStockIns = stockIns.filter((s: any) => s.key === this.itemId);
-  //   console.log('filteredStockIns: ', filteredStockIns);
-
-  //   const filteredAllocations = allocations.filter((a: any) => a.key === this.itemId);
-
-  //   this.reportData = [
-  //     ...filteredStockIns.map((d: any) => ({
-  //       date: d.date,
-  //       source: d.source || 'Store',
-  //       destination: d.destination || 'District',
-  //       type: 'StockIn',
-  //       brand: d.brand,
-  //       quantity: d.quantity,
-  //       stockSource: d.quantity,
-  //       stockDestination: 0
-  //     })),
-  //     ...filteredAllocations.map((d: any) => ({
-  //       date: d.date,
-  //       source: d.district || 'District',
-  //       destination: d.facility || 'Facility',
-  //       type: 'StockOut',
-  //       brand: d.brand,
-  //       quantity: d.quantity,
-  //       stockSource: d.stockSource || 0,
-  //       stockDestination: d.stockDestination || 0
-  //     }))
-  //   ];
-  // }
-
-
 
 
   async ngOnInit() {
@@ -152,22 +102,66 @@ export class ItemDetailedRepotComponent implements OnInit {
 
   }
 
-
-  // ✅ Getter — automatically returns filtered data
-  get filteredData(): any[] {
-    if (!this.fromDate && !this.toDate) return this.reportRows;
-
-    const from = this.fromDate ? moment(this.fromDate).startOf('day') : null;
-    const to = this.toDate ? moment(this.toDate).endOf('day') : null;
-
-    return this.reportRows.filter(row => {
-      const rowDate = moment(row.date, 'DD/MM/YYYY'); // Match format if needed
-
-      if (from && rowDate.isBefore(from)) return false;
-      if (to && rowDate.isAfter(to)) return false;
-      return true;
-    });
+  // Called when clicking the Date header
+  sortData(column: string) {
+    if (this.sortColumn === column) {
+      // Cycle: '' → asc → desc → ''
+      if (this.sortDirection === '') {
+        this.sortDirection = 'asc';
+      } else if (this.sortDirection === 'asc') {
+        this.sortDirection = 'desc';
+      } else {
+        this.sortDirection = '';
+      }
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
   }
+
+  // For icon rendering
+  getSortDirection(column: string) {
+    return this.sortColumn === column ? this.sortDirection : '';
+  }
+
+
+  // ✅ Getter — returns filtered + sorted data
+  get filteredData(): any[] {
+    // Step 1: Apply date range filter
+    let data = this.reportRows;
+    if (this.fromDate || this.toDate) {
+      const from = this.fromDate ? moment(this.fromDate).startOf('day') : null;
+      const to = this.toDate ? moment(this.toDate).endOf('day') : null;
+
+      data = data.filter(row => {
+        const rowDate = moment(row.date, 'DD/MM/YYYY'); // adjust format if needed
+        if (from && rowDate.isBefore(from)) return false;
+        if (to && rowDate.isAfter(to)) return false;
+        return true;
+      });
+    }
+
+    // Step 2: Apply sorting (only if a sort column is set)
+    if (this.sortColumn && this.sortDirection) {
+      data = [...data].sort((a, b) => {
+        let valueA = a[this.sortColumn];
+        let valueB = b[this.sortColumn];
+
+        // Special handling for date
+        if (this.sortColumn === 'date') {
+          valueA = new Date(valueA).getTime();
+          valueB = new Date(valueB).getTime();
+        }
+
+        if (valueA < valueB) return this.sortDirection === 'asc' ? -1 : 1;
+        if (valueA > valueB) return this.sortDirection === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+
+    return data;
+  }
+
 
 
 
