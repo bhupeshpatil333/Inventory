@@ -3,7 +3,7 @@
 
     <mat-form-field appearance="outline" class="w-full">
         <mat-label>Item</mat-label>
-        <mat-select formControlName="item">
+        <mat-select formControlName="item" [(ngModel)]="selectedItem">
             <mat-option *ngFor="let item of items" [value]="item.key">{{ item.name }}</mat-option>
         </mat-select>
     </mat-form-field>

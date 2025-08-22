@@ -39,68 +39,144 @@ export class ItemDetailedRepotComponent implements OnInit {
     private facilityService: FacilityService
   ) { }
 
-
   async ngOnInit() {
     this.item = history.state.data;
-    console.log('Selected Item:', this.item);
 
-    // Load data from services
-    const stockIn = await this.stockService.getStockData();
-    const allocations = await this.allocationService.getData();
-    console.log('allocations: ', allocations);
-    const districts = await this.districtService.getDistrictData();
-    const facilities = await this.facilityService.getFacilitytData();
+    const [stockIn, allocations, districts, facilities] = await Promise.all([
+      this.stockService.getStockData(),
+      this.allocationService.getData(),
+      this.districtService.getDistrictData(),
+      this.facilityService.getFacilitytData()
+    ]);
 
-    let runningStock = 0;
+    const transactions: any = [];
 
-    const stockRows = stockIn
+    // Stock In entries
+    stockIn
       .filter(s => s.key === this.item.key)
-      .sort((a, b) => a.dateOfEntry?.seconds - b.dateOfEntry?.seconds)
-      .map(s => {
-        runningStock += s.quantity;
-        return {
-          date: s.dateOfEntry?.seconds
-            ? new Date(s.dateOfEntry.seconds * 1000)
-            : (s.date ? new Date(s.date) : null),
+      .forEach(s => {
+        const date = s.dateOfEntry?.seconds
+          ? new Date(s.dateOfEntry.seconds * 1000)
+          : (s.date ? new Date(s.date) : null);
+
+        transactions.push({
+          date,
           type: 'StockIn',
-          brand: s.brand,
           quantity: s.quantity,
+          brand: s.brand,
           source: 'Store In',
-          destination: 'Store In',
-          stockSource: 0,
-          stockDestination: runningStock
-        };
+          destination: 'Store In'
+        });
       });
 
-    const allocationRows = allocations
+    // Stock Out (allocations)
+    allocations
       .filter(a => a.item || a.item === this.item.key)
-      .sort((a, b) => a.dateOfEntry?.seconds - b.dateOfEntry?.seconds)
-      .map(a => {
+      .forEach(a => {
+        const date = a.dateOfEntry?.seconds
+          ? new Date(a.dateOfEntry.seconds * 1000)
+          : (a.date ? new Date(a.date) : null);
+
         const districtName = districts.find(d => d.key === a.district)?.name;
         const facilityName = facilities.find(f => f.key === a.facility)?.name;
-
-        const source = 'Store';
         const destination = facilityName || districtName || 'Unknown';
-        const qty = a.quantity || a.allocateQuantity || 0;
-        runningStock -= qty;
 
-        return {
-          date: a.dateOfEntry?.seconds
-            ? new Date(a.dateOfEntry.seconds * 1000).toLocaleDateString()
-            : (a.date ? new Date(a.date).toLocaleDateString() : 'N/A'),
-          type: a.type || 'StockOut',
-          brand: a.brand || 'N/A',
+        const qty = a.quantity ?? a.allocateQuantity ?? 0;
+
+        transactions.push({
+          date,
+          type: 'StockOut',
           quantity: qty,
-          source,
-          destination,
-          stockSource: runningStock,
-          stockDestination: 0
-        };
+          brand: a.brand || 'N/A',
+          source: 'Store',
+          destination
+        });
       });
 
-    this.reportRows = [...stockRows, ...allocationRows];
+    // Sort all by date
+    transactions.sort((a: any, b: any) => (a.date?.getTime() ?? 0) - (b.date?.getTime() ?? 0));
 
+    // Calculate stockDestination
+    let runningStock = 0;
+    this.reportRows = transactions.map((entry: any) => {
+      if (entry.type === 'StockIn') {
+        runningStock += entry.quantity;
+      } else {
+        runningStock -= entry.quantity;
+      }
+
+      return {
+        ...entry,
+        stockDestination: runningStock
+      };
+    });
   }
+
+
+
+  // async ngOnInit() {
+  //   this.item = history.state.data;
+  //   console.log('Selected Item:', this.item);
+
+  //   // Load data from services
+  //   const stockIn = await this.stockService.getStockData();
+  //   const allocations = await this.allocationService.getData();
+  //   console.log('allocations: ', allocations);
+  //   const districts = await this.districtService.getDistrictData();
+  //   const facilities = await this.facilityService.getFacilitytData();
+
+  //   let runningStock = 0;
+
+  //   const stockRows = stockIn
+  //     .filter(s => s.key === this.item.key)
+  //     .sort((a, b) => a.dateOfEntry?.seconds - b.dateOfEntry?.seconds)
+  //     .map(s => {
+  //       runningStock += s.quantity;
+  //       return {
+  //         date: s.dateOfEntry?.seconds
+  //           ? new Date(s.dateOfEntry.seconds * 1000)
+  //           : (s.date ? new Date(s.date) : null),
+  //         type: 'StockIn',
+  //         brand: s.brand,
+  //         quantity: s.quantity,
+  //         source: 'Store In',
+  //         destination: 'Store In',
+  //         stockSource: 0,
+  //         stockDestination: runningStock
+  //       };
+  //     });
+
+  //   const allocationRows = allocations
+  //     .filter(a => a.item || a.item === this.item.key)
+  //     .sort((a, b) => a.dateOfEntry?.seconds - b.dateOfEntry?.seconds)
+  //     .map(a => {
+  //       const districtName = districts.find(d => d.key === a.district)?.name;
+  //       const facilityName = facilities.find(f => f.key === a.facility)?.name;
+
+  //       const source = 'Store';
+  //       const destination = facilityName || districtName || 'Unknown';
+  //       const qty = a.quantity || a.allocateQuantity || 0;
+  //       runningStock -= qty;
+
+  //       return {
+  //         date: a.dateOfEntry?.seconds
+  //           ? new Date(a.dateOfEntry.seconds * 1000).toLocaleDateString()
+  //           : (a.date ? new Date(a.date).toLocaleDateString() : 'N/A'),
+  //         type: a.type || 'StockOut',
+  //         brand: a.brand || 'N/A',
+  //         quantity: qty,
+  //         source,
+  //         destination,
+  //         stockSource: runningStock,
+  //         stockDestination: 0
+  //       };
+  //     });
+
+  //   this.reportRows = [...stockRows, ...allocationRows];
+
+  // }
+
+
 
   // Called when clicking the Date header
   sortData(column: string) {

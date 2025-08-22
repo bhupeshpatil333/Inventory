@@ -28,7 +28,7 @@
     <input matInput formControlName="email" />
     <mat-error *ngIf="form.get('email')?.hasError('required')">Email is required</mat-error>
     <mat-error *ngIf="form.get('email')?.hasError('email')">Invalid email address</mat-error>
-
+    <mat-error *ngIf="form.get('email')?.hasError('emailExists')">This email is already registered</mat-error>
   </mat-form-field>
   <mat-form-field appearance="outline" class="w-full">
     <mat-label>Password</mat-label>

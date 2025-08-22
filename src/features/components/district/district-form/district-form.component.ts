@@ -7,6 +7,7 @@ import { MaterialModule } from '../../../../shared/shared.module';
 import { DirtyCheckService } from '../../../../shared/services/dirty-check.service';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { ToastType } from '../../../../shared/toast-type.enum';
+import { CommonService } from '../../../../shared/services/common.service';
 
 @Component({
   selector: 'app-district-form',
@@ -26,6 +27,7 @@ export class DistrictFormComponent {
   constructor(
     private fb: FormBuilder,
     private districtService: DistrictService,
+    private commonService: CommonService,
     private router: Router,
     private route: ActivatedRoute,
     private dirtyCheck: DirtyCheckService,
@@ -61,6 +63,21 @@ export class DistrictFormComponent {
     if (this.form.invalid) return;
 
     try {
+      // 🔍 check email exist only for new district
+      if (!this.id) {
+        const exists = await this.commonService.checkFieldExists(
+          'districts',   // Firestore collection
+          'email',       // field to check
+          this.form.value.email
+        );
+
+        if (exists) {
+          this.form.get('email')?.setErrors({ emailExists: true });
+          this.toast.show('Email already exists!', ToastType.Error);
+          return;
+        }
+      }
+
       if (this.id) {
         await this.districtService.updateDistrict(this.id, this.form.value);
         this.toast.show('Updated Successfully.', ToastType.Success);

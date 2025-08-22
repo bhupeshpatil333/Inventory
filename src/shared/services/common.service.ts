@@ -47,6 +47,19 @@ export class CommonService {
     });
   }
 
+  // ✅ Common method for email check
+  async checkFieldExists(
+    collectionName: string,
+    fieldName: string,
+    value: string
+  ): Promise<boolean> {
+    const colRef = collection(this.firestore, collectionName);
+    const q = query(colRef, where(fieldName, '==', value));
+    const snapshot = await getDocs(q);
+    return !snapshot.empty; // true if exists
+  }
+
+
   // 📦 Get all documents ordered by createdAt DESC
   getAll(collectionName: string): Promise<any[]> {
     const colRef = this.getCollectionRef(collectionName);

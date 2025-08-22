@@ -26,7 +26,7 @@ export class StockInHistoryAddEditComponent {
     private fb: FormBuilder,
     private itemService: ItemService, private router: Router, private commonService: CommonService, private stocService: StockService) {
     this.stockForm = this.fb.group({
-      item: ['', Validators.required],
+      item: [''],
       quantity: ['', [Validators.required, Validators.min(1)]],
       dateOfEntry: ['', Validators.required],
       dateOfExpiry: ['', Validators.required],
