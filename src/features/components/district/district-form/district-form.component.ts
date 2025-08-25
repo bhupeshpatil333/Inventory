@@ -40,7 +40,7 @@ export class DistrictFormComponent {
       adminName: ['', [Validators.required, Validators.pattern(/\S+/)]],
       phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.pattern(/\S+/)]],
+      password: ['', this.id ? [] : [Validators.required, Validators.pattern(/\S+/)]], // changes
     });
 
 
@@ -61,6 +61,7 @@ export class DistrictFormComponent {
 
   async submit() {
     if (this.form.invalid) return;
+    // when Add the district that time Password Feild is Show with proper validation and when edit the form that time password feild is hide but make sure when Edit that tiem DB only change the value without password feild, jabhi edit krunga tabh password ki feild delete nhi honi chaiye DB se this is important
 
     try {
       // 🔍 check email exist only for new district
@@ -79,7 +80,12 @@ export class DistrictFormComponent {
       }
 
       if (this.id) {
-        await this.districtService.updateDistrict(this.id, this.form.value);
+        // Remove password field for update operation
+        const updateData = { ...this.form.value };
+        delete updateData.password;
+        //  // changes end
+
+        await this.districtService.updateDistrict(this.id, updateData);
         this.toast.show('Updated Successfully.', ToastType.Success);
         this.router.navigate(['dashboard/district']);
       } else {

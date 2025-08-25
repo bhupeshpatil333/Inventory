@@ -30,12 +30,12 @@
     <mat-error *ngIf="form.get('email')?.hasError('email')">Invalid email address</mat-error>
     <mat-error *ngIf="form.get('email')?.hasError('emailExists')">This email is already registered</mat-error>
   </mat-form-field>
-  <mat-form-field appearance="outline" class="w-full">
+  <!-- changes -->
+  <mat-form-field appearance="outline" class="w-full" *ngIf="!id">
     <mat-label>Password</mat-label>
-    <input matInput formControlName="password" />
+    <input matInput formControlName="password" type="password" />
     <mat-error *ngIf="form.get('password')?.hasError('required')">Password is required</mat-error>
     <mat-error *ngIf="form.get('password')?.hasError('pattern')">Invalid password</mat-error>
-
   </mat-form-field>
 
   <button mat-flat-button color="primary" type="submit">Save</button>

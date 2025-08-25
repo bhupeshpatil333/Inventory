@@ -38,6 +38,7 @@ export class DistrictComponent {
       if (data) {
         this.dataSource = data;
         this.loading = false;
+        console.log('this.dataSource: ', this.dataSource);
       }
     })
 
