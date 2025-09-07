@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, deleteDoc, doc, docData, Firestore, orderBy, updateDoc, getDoc, getDocs, onSnapshot, query, where } from '@angular/fire/firestore';
 import { District } from '../features/components/district/district.interface';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, shareReplay } from 'rxjs';
 // import { getDoc, getDocs, onSnapshot, query, where } from 'firebase/firestore';
 
 @Injectable({
@@ -11,6 +11,7 @@ export class DistrictService {
 
   // districtSub$ = new BehaviorSubject<any[]>([]);
   // districtSubById$ = new BehaviorSubject<any | undefined>(null);
+
 
   constructor(private firestore: Firestore) { }
 
@@ -46,6 +47,28 @@ export class DistrictService {
   //     return result;
   //   });
   // }
+
+  getDistrictData2(): Observable<any[]> {
+    const q = query(
+      this.getCollection(),
+      orderBy('updatedAt', 'desc') // Only use orderBy
+    );
+
+    return new Observable<any[]>((observer) => {
+      const unsubscribe = onSnapshot(q, (res) => {
+        const data = res.docs
+          .map((doc) => ({
+            key: doc.id,
+            ...doc.data()
+          }))
+          .filter((item: any) => item.isDelete !== true); // ✅ Filter deleted items
+
+        observer.next(data);
+      });
+
+      return { unsubscribe };
+    });
+  }
 
   getDistrictData(): Promise<any[]> {
     const q = query(
@@ -106,4 +129,35 @@ export class DistrictService {
     });
   }
 
+  // new services with get data and store to use in mupliple components
+  private districtCache$ = new BehaviorSubject<any[]>([]);
+  private initialized = false;
+
+  // ✅ Cached observable for realtime data
+  // 🔑 Cached + realtime data
+  getDistrictDataCached(): Observable<any[]> {
+    if (!this.initialized) {
+      this.initialized = true;
+
+      const q = query(this.getCollection(), orderBy('updatedAt', 'desc'));
+
+      onSnapshot(q, (res) => {
+        const data = res.docs
+          .map((doc) => ({
+            key: doc.id,
+            ...doc.data(),
+          }))
+          .filter((item: any) => item.isDelete !== true);
+
+        this.districtCache$.next(data); // ✅ cache update
+      });
+    }
+
+    return this.districtCache$.asObservable();
+  }
+
+  // ✅ Optionally clear cache (if needed)
+  clearCache() {
+    this.districtCache$ = null as any;
+  }
 }

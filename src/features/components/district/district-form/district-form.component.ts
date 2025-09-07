@@ -35,22 +35,36 @@ export class DistrictFormComponent {
   ) { }
 
   ngOnInit() {
-    this.form = this.fb.group({
-      name: ['', [Validators.required, Validators.pattern(/\S+/)]],
-      adminName: ['', [Validators.required, Validators.pattern(/\S+/)]],
-      phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', this.id ? [] : [Validators.required, Validators.pattern(/\S+/)]], // changes
-    });
-
-
     // Try getting full object from navigation state
     this.districtData = history.state.data;
     console.log('this.districtData: ', this.districtData);
     this.id = this.districtData?.key;
 
+    // Initialize form controls
+    const formControls: any = {
+      name: ['', [Validators.required, Validators.pattern(/\S+/)]],
+      adminName: ['', [Validators.required, Validators.pattern(/\S+/)]],
+      phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      email: ['', [Validators.required, Validators.email]],
+    };
+
+    // Only add password field if not in edit mode
+    if (!this.id) {
+      formControls.password = ['', [Validators.required, Validators.pattern(/\S+/)]];
+    }
+
+    this.form = this.fb.group(formControls);
+
     if (this.districtData) {
-      this.form.patchValue(this.districtData);
+      // Get the latest data from the database
+      this.districtService.getDistrictById(this.id!).then(district => {
+        // Ensure password exists in the data object
+        const districtDataWithPassword = {
+          ...district,
+          password: district?.password ?? ''
+        };
+        this.form.patchValue(districtDataWithPassword);
+      });
     }
 
 
@@ -80,16 +94,33 @@ export class DistrictFormComponent {
       }
 
       if (this.id) {
-        // Remove password field for update operation
+        // In edit mode, prepare update data
         const updateData = { ...this.form.value };
-        delete updateData.password;
-        //  // changes end
+
+        // Check if password exists in original data
+        const existingDistrict = await this.districtService.getDistrictById(this.id);
+        if (!existingDistrict || !('password' in existingDistrict)) {
+          // If district doesn't exist or password field doesn't exist, add it with empty string
+          updateData.password = '';
+        } else {
+          // Don't modify existing password
+          delete updateData.password;
+        }
 
         await this.districtService.updateDistrict(this.id, updateData);
         this.toast.show('Updated Successfully.', ToastType.Success);
         this.router.navigate(['dashboard/district']);
       } else {
-        await this.districtService.addDistrict(this.form.value);
+        // For new district
+        const formData = { ...this.form.value };
+
+        // Ensure password is provided for new districts
+        if (!formData.password?.trim()) {
+          this.toast.show('Password is required for new district', ToastType.Error);
+          return;
+        }
+
+        await this.districtService.addDistrict(formData);
         this.toast.show('Saved successfully!', ToastType.Success);
         this.router.navigate(['dashboard/district']);
       }

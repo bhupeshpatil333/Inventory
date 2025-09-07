@@ -5,16 +5,25 @@ import { FormsModule } from '@angular/forms';
 import { ItemService } from '../../items/service/item.service';
 import { StockService } from '../../stockIn/stock.service';
 import { Router } from '@angular/router';
+import { ColumnConfig, CommonTableComponent } from "../../../../shared/common-table/common-table.component";
 
 @Component({
   selector: 'app-stock-report',
-  imports: [MaterialModule, CommonModule, FormsModule],
+  imports: [MaterialModule, CommonModule, FormsModule, CommonTableComponent],
   templateUrl: './stock-report.component.html',
   styleUrl: './stock-report.component.scss'
 })
 export class StockReportComponent implements OnInit {
 
   // stockReport
+  columns: ColumnConfig[] = [
+    { key: 'item', header: 'Name', type: 'text' },
+    { key: 'type', header: 'Type', type: 'text' },
+    { key: 'brand', header: 'Brand', type: 'text' },
+    { key: 'quantity', header: 'In Stock', type: 'text' },
+    { key: 'unit', header: 'Unit', type: 'text' },
+    { key: 'actions', header: 'Action', type: 'actions', actions: ['view'] }
+  ];
 
   filteredItems: any[] = [];
   items: any[] = [];

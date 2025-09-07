@@ -1,0 +1,69 @@
+<!-- <div class="date-range-input-wrapper" style="position: relative; display: flex; align-items: center;">
+    <input type="text" ngxDaterangepickerMd [showCustomRangeLabel]="true"
+     [showRanges]="true" [ranges]="ranges"
+        [(ngModel)]="selected" [alwaysShowCalendars]="true"
+         [applyButton]="true" [cancelButton]="true"
+        [maxDate]="maxDate" [locale]="{applyLabel: 'APPLY', cancelLabel: 'CANCEL', format: 'DD-MM-YYYY'}"
+        startKey="startDate" endKey="endDate" name="daterange" readonly style="padding-right: 70px;" />
+    <button mat-icon-button type="button" class="calendar-icon" style="position: absolute; right: 40px;" tabindex="-1">
+        <mat-icon>calendar_today</mat-icon>
+    </button>
+    <button mat-icon-button type="button" class="cancel-icon" (click)="resetToCurrentMonth()"
+        style="position: absolute; right: 5px;">
+        <mat-icon>cancel</mat-icon>
+    </button>
+</div> -->
+
+
+<!-- <div class="date-range-input-wrapper" style="position: relative; display: flex; align-items: center;">
+    <input type="text" ngxDaterangepickerMd [showCustomRangeLabel]="true" [ranges]="ranges" [(ngModel)]="selected"
+        [alwaysShowCalendars]="true" [maxDate]="maxDate"
+        [locale]="{applyLabel: 'APPLY', cancelLabel: 'CANCEL', format: 'DD-MM-YYYY'}" startKey="startDate"
+        endKey="endDate" name="daterange" readonly style="padding-right: 70px;" />
+
+    <button mat-icon-button type="button" class="calendar-icon" style="position: absolute; right: 40px;" tabindex="-1">
+        <mat-icon>calendar_today</mat-icon>
+    </button>
+
+    <button mat-icon-button type="button" class="cancel-icon" (click)="resetToCurrentMonth()"
+        style="position: absolute; right: 5px;">
+        <mat-icon>cancel</mat-icon>
+    </button>
+</div> -->
+
+<!-- <div class="date-range-input-wrapper" style="position: relative; display: flex; align-items: center;">
+    <input mat-input type="text" ngxDaterangepickerMd [showCustomRangeLabel]="true" [ranges]="ranges"
+        [(ngModel)]="selected" (ngModelChange)="onDateSelected($event)" [alwaysShowCalendars]="true" [maxDate]="maxDate"
+        [locale]="{applyLabel: 'APPLY', cancelLabel: 'CANCEL', format: 'DD-MM-YYYY'}" startKey="startDate"
+        endKey="endDate" name="daterange" readonly style="padding-right: 70px;" />
+
+
+    <button mat-icon-button type="button" class="calendar-icon" style="position: absolute; right: 40px;" tabindex="-1">
+        <mat-icon>calendar_today</mat-icon>
+    </button>
+
+    <button mat-icon-button type="button" class="cancel-icon" (click)="resetToCurrentMonth()"
+        style="position: absolute; right: 5px;">
+        <mat-icon>cancel</mat-icon>
+    </button>
+</div> -->
+
+<div class="date-range-input-wrapper"
+    style="position: relative; display: flex; align-items: center; justify-content: end;">
+
+    <input type="text" ngxDaterangepickerMd #picker [showCustomRangeLabel]="true" [ranges]="ranges"
+        [(ngModel)]="selected" (ngModelChange)="onDateSelected($event)" [alwaysShowCalendars]="true" [maxDate]="maxDate"
+        [readonly]="!isCalendarOpening" [locale]="{ applyLabel: 'APPLY', cancelLabel: 'CANCEL', format: 'DD-MM-YYYY' }"
+        startKey="startDate" endKey="endDate" name="daterange" style="padding-right: 70px;" />
+
+    <!-- Calendar button triggers openCalendar() -->
+    <button mat-icon-button type="button" class="calendar-icon" style="position: absolute; right: 40px;" tabindex="-1"
+        (click)="openCalendar()">
+        <mat-icon>calendar_today</mat-icon>
+    </button>
+
+    <button mat-icon-button type="button" class="cancel-icon" (click)="resetToCurrentMonth()"
+        style="position: absolute; right: 5px;">
+        <mat-icon>cancel</mat-icon>
+    </button>
+</div>

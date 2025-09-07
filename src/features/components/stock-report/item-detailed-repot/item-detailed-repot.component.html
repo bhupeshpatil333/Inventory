@@ -2,7 +2,7 @@
     <h2>Item Detailed Report</h2>
 
     <div class="flex items-center gap-4 my-4">
-        <mat-form-field appearance="outline">
+        <!-- <mat-form-field appearance="outline">
             <mat-label>From Date</mat-label>
             <input matInput [matDatepicker]="picker1" [(ngModel)]="fromDate" />
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
@@ -14,7 +14,13 @@
             <input matInput [matDatepicker]="picker2" [(ngModel)]="toDate" />
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
-        </mat-form-field>
+        </mat-form-field> -->
+        <!-- <app-common-date-range-piker [(fromDate)]="fromDate" [(toDate)]="toDate" [dateFilter]="dateFilterFn">
+        </app-common-date-range-piker> -->
+        <app-common-date-range-piker [(fromDate)]="fromDate" [(toDate)]="toDate">
+        </app-common-date-range-piker>
+
+
     </div>
 
 

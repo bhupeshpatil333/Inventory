@@ -10,11 +10,13 @@ import { FacilityService } from '../../facility/facility.service';
 import { AllocationHistoryService } from '../../allocation-history/services/allocation-history.service';
 import { CommonService } from '../../../../shared/services/common.service';
 import moment from 'moment';
+import { CommonDateRangePikerComponent } from "../../../../shared/common-date-range-piker/common-date-range-piker.component";
+import { Dayjs } from 'dayjs';
 
 @Component({
   selector: 'app-item-detailed-repot',
   standalone: true,
-  imports: [MaterialModule, CommonModule, FormsModule],
+  imports: [MaterialModule, CommonModule, FormsModule, CommonDateRangePikerComponent],
   templateUrl: './item-detailed-repot.component.html',
   styleUrls: ['./item-detailed-repot.component.scss']
 })
@@ -27,8 +29,8 @@ export class ItemDetailedRepotComponent implements OnInit {
   reportRows: any[] = [];
   item: any;
 
-  fromDate: Date | null = null;
-  toDate: Date | null = null;
+  fromDate: Dayjs | null = null;
+  toDate: Dayjs | null = null;
 
   constructor(
     private itemService: ItemService,
@@ -206,13 +208,22 @@ export class ItemDetailedRepotComponent implements OnInit {
     // Step 1: Apply date range filter
     let data = this.reportRows;
     if (this.fromDate || this.toDate) {
-      const from = this.fromDate ? moment(this.fromDate).startOf('day') : null;
-      const to = this.toDate ? moment(this.toDate).endOf('day') : null;
+      // const from = this.fromDate ? moment(this.fromDate).startOf('day') : null;
+      // const to = this.toDate ? moment(this.toDate).endOf('day') : null;
+      const from = this.fromDate ? this.fromDate.startOf('day').toDate() : null;
+      const to = this.toDate ? this.toDate.endOf('day').toDate() : null;
 
+
+      // data = data.filter(row => {
+      //   const rowDate = moment(row.date, 'DD/MM/YYYY'); // adjust format if needed
+      //   if (from && rowDate.isBefore(from)) return false;
+      //   if (to && rowDate.isAfter(to)) return false;
+      //   return true;
+      // });
       data = data.filter(row => {
         const rowDate = moment(row.date, 'DD/MM/YYYY'); // adjust format if needed
-        if (from && rowDate.isBefore(from)) return false;
-        if (to && rowDate.isAfter(to)) return false;
+        if (from && rowDate.isBefore(moment(from))) return false;
+        if (to && rowDate.isAfter(moment(to))) return false;
         return true;
       });
     }
