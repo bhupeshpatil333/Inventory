@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, ViewChild, ElementRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from '../shared.module';
 import dayjs, { Dayjs } from 'dayjs';
@@ -12,156 +12,131 @@ import { DaterangepickerDirective } from 'ngx-daterangepicker-material';
   templateUrl: './common-date-range-piker.component.html',
   styleUrl: './common-date-range-piker.component.scss'
 })
-// export class CommonDateRangePikerComponent {
-//   selected: { startDate: Dayjs, endDate: Dayjs } = {
-//     startDate: dayjs(),
-//     endDate: dayjs()
-//   };
-//   maxDate = dayjs();
-//   locale = { applyLabel: 'APPLY', cancelLabel: 'CANCEL', format: 'DD-MM-YYYY' };
-
-//   ranges: any = {
-//     'Today': [dayjs(), dayjs()],
-//     'Yesterday': [dayjs().subtract(1, 'day'), dayjs().subtract(1, 'day')],
-//     'Last 7 Days': [dayjs().subtract(6, 'day'), dayjs()],
-//     'Last 30 Days': [dayjs().subtract(29, 'day'), dayjs()],
-//     'This Month': [dayjs().startOf('month'), dayjs().endOf('month')],
-//     'Last Month': [
-//       dayjs().subtract(1, 'month').startOf('month'),
-//       dayjs().subtract(1, 'month').endOf('month')
-//     ]
-//   };
-
-
-//   constructor() {
-//     this.resetToCurrentMonth();
-//   }
-
-//   resetToCurrentMonth() {
-//     this.selected = {
-//       startDate: dayjs().startOf('month'),
-//       endDate: dayjs()
-//     };
-//   }
-// }
-
-export class CommonDateRangePikerComponent {
-  // parent bindings
-  // @Input() fromDate!: Date | null;
-  // @Input() toDate!: Date | null;
-  // @Output() fromDateChange = new EventEmitter<Date | null>();
-  // @Output() toDateChange = new EventEmitter<Date | null>();
-
-  // // internal state used by ngxDaterangepickerMd
-  // // selected: { startDate: dayjs.Dayjs, endDate: dayjs.Dayjs };
-  // selected: { startDate: Dayjs, endDate: Dayjs } = {
-  //   startDate: dayjs(),
-  //   endDate: dayjs()
-  // };
-
-  // maxDate = dayjs();
-  // ranges: any = {
-  //   'Today': [dayjs(), dayjs()],
-  //   'Yesterday': [dayjs().subtract(1, 'day'), dayjs().subtract(1, 'day')],
-  //   'Last 7 Days': [dayjs().subtract(6, 'day'), dayjs()],
-  //   'Last 30 Days': [dayjs().subtract(29, 'day'), dayjs()],
-  //   'This Month': [dayjs().startOf('month'), dayjs().endOf('month')],
-  //   'Last Month': [
-  //     dayjs().subtract(1, 'month').startOf('month'),
-  //     dayjs().subtract(1, 'month').endOf('month')
-  //   ]
-  // };
-
-  // constructor() {
-  //   this.resetToCurrentMonth();
-  // }
-
-  // // sync when picker value changes
-  // onDateSelected(e: any) {
-  //   this.fromDate = e.startDate?.toDate ? e.startDate.toDate() : e.startDate;
-  //   this.toDate = e.endDate?.toDate ? e.endDate.toDate() : e.endDate;
-  //   this.fromDateChange.emit(this.fromDate);
-  //   this.toDateChange.emit(this.toDate);
-  // }
-
-  // resetToCurrentMonth() {
-  //   this.selected = {
-  //     startDate: dayjs().startOf('month'),
-  //     endDate: dayjs()
-  //   };
-  //   this.onDateSelected(this.selected);
-  // }
+export class CommonDateRangePikerComponent implements OnInit {
   @Input() fromDate!: Dayjs | null;
   @Input() toDate!: Dayjs | null;
   @Output() fromDateChange = new EventEmitter<Dayjs | null>();
   @Output() toDateChange = new EventEmitter<Dayjs | null>();
   @ViewChild('picker', { read: DaterangepickerDirective }) picker!: DaterangepickerDirective;
-  // @ViewChild('pickerInput', { read: ElementRef }) pickerElementRef!: ElementRef;
 
-  isCalendarOpening = false;
-
-  // picker needs moment
+  // Selected date range for the picker (using moment as required by ngx-daterangepicker-material)
   selected: { startDate: moment.Moment; endDate: moment.Moment } = {
     startDate: moment(),
     endDate: moment()
   };
 
-  maxDate = dayjs();
+  // Maximum date allowed
+  maxDate = moment();
 
-  ranges: any = {
-    'Today': [moment(), moment()],
-    'Yesterday': [moment().subtract(1, 'day'), moment().subtract(1, 'day')],
-    'Last 7 Days': [moment().subtract(6, 'day'), moment()],
-    'Last 30 Days': [moment().subtract(29, 'day'), moment()],
-    'This Month': [moment().startOf('month'), moment().endOf('month')],
-    'Last Month': [
-      moment().subtract(1, 'month').startOf('month'),
-      moment().subtract(1, 'month').endOf('month')
-    ]
+  // Predefined ranges for the sidebar
+  ranges: any = {};
+
+  // Locale configuration
+  locale = {
+    applyLabel: 'Apply',
+    cancelLabel: 'Cancel',
+    format: 'DD-MM-YYYY',
+    customRangeLabel: 'Custom Range',
+    daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+    monthNames: [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ],
+    firstDay: 1 // Monday as first day
   };
 
   constructor() {
+    this.initializeMomentLocale();
+    this.initializeRanges();
+  }
+
+  ngOnInit() {
     this.resetToCurrentMonth();
   }
 
-  // convert Moment → Dayjs when emitting
-  onDateSelected(e: any) {
-    this.fromDate = e.startDate ? dayjs(e.startDate.toDate()) : null;
-    this.toDate = e.endDate ? dayjs(e.endDate.toDate()) : null;
-
-    this.fromDateChange.emit(this.fromDate);
-    this.toDateChange.emit(this.toDate);
+  /**
+   * Configure moment.js locale for Monday as first day of week
+   */
+  private initializeMomentLocale(): void {
+    moment.locale('en', {
+      week: {
+        dow: 1, // Monday is the first day of the week
+        doy: 4  // Used to determine the first week of the year
+      }
+    });
   }
 
-  // convert Dayjs → Moment for picker
-  resetToCurrentMonth() {
-    const start = dayjs().startOf('month');
-    const end = dayjs();
+  /**
+   * Initialize predefined date ranges for the sidebar
+   */
+  private initializeRanges(): void {
+    this.ranges = {
+      'Today': [moment().startOf('day'), moment().endOf('day')],
+      'Yesterday': [
+        moment().subtract(1, 'day').startOf('day'),
+        moment().subtract(1, 'day').endOf('day')
+      ],
+      'Last 7 Days': [
+        moment().subtract(6, 'days').startOf('day'),
+        moment().endOf('day')
+      ],
+      'Last 30 Days': [
+        moment().subtract(29, 'days').startOf('day'),
+        moment().endOf('day')
+      ],
+      'This Month': [
+        moment().startOf('month'),
+        moment().endOf('month')
+      ],
+      'Last Month': [
+        moment().subtract(1, 'month').startOf('month'),
+        moment().subtract(1, 'month').endOf('month')
+      ]
+    };
+  }
+
+  /**
+   * Handle date selection from the picker
+   * Convert moment objects to dayjs and emit changes
+   */
+  onDateSelected(event: any): void {
+    if (event && event.startDate && event.endDate) {
+      this.fromDate = dayjs(event.startDate.toDate());
+      this.toDate = dayjs(event.endDate.toDate());
+
+      this.fromDateChange.emit(this.fromDate);
+      this.toDateChange.emit(this.toDate);
+    }
+  }
+
+  /**
+   * Reset the selected range to current month
+   */
+  resetToCurrentMonth(): void {
+    const start = moment().startOf('month');
+    const end = moment();
 
     this.selected = {
-      startDate: moment(start.toDate()),
-      endDate: moment(end.toDate())
+      startDate: start,
+      endDate: end
     };
 
+    // Trigger the selection event
     this.onDateSelected(this.selected);
   }
-  openCalendar() {
-    // Temporarily make input not readonly
-    this.isCalendarOpening = true;
 
-    // Use setTimeout to ensure the readonly change is applied
-    setTimeout(() => {
-      // Method 1: Try to use the directive's open method
-      if (this.picker && typeof this.picker.open === 'function') {
-        try {
-          this.picker.open();
-          this.isCalendarOpening = false;
-          return;
-        } catch (error) {
-          console.warn('Directive open method failed:', error);
-        }
+  /**
+   * Programmatically open the calendar
+   */
+  openCalendar(): void {
+    if (this.picker && typeof this.picker.open === 'function') {
+      try {
+        this.picker.open();
+      } catch (error) {
+        console.warn('Error opening calendar:', error);
       }
-    }, 10);
+    } else {
+      console.warn('Date picker not available');
+    }
   }
-
 }
