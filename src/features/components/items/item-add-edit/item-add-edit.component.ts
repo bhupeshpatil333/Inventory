@@ -13,12 +13,13 @@ import { ItemService } from '../service/item.service';
   styleUrl: './item-add-edit.component.scss'
 })
 export class ItemAddEditComponent {
+  initialFormValue: string = '';
 
   itemForm!: FormGroup;
-  // types = ['Hospital', 'Clinic'];
+  itemsData: any;
   isEdit = false;
   itemId: string | null = null;
-
+  quantityUnits: string[] = ['Packet', 'Pieces', 'Litre', 'ml', 'g', 'Kg', 'Tablet'];
   constructor(private fb: FormBuilder, private route: ActivatedRoute, private router: Router, private itemService: ItemService,) {
     this.itemForm = this.fb.group({
       name: [''],
@@ -29,27 +30,36 @@ export class ItemAddEditComponent {
 
   }
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.isEdit = true;
-      this.itemId = id;
-      console.log('this.itemId: ', this.itemId);
+  // This method is called whenever the form value changes
+  ngDoCheck(): void {
+    const currentValue = JSON.stringify(this.itemForm.value);
+    console.log('currentValue: ', currentValue);
+    history.replaceState({ ...history.state, currentFormValue: currentValue }, '');
+  }
 
-      this.itemService.getItemById(this.itemId).then(item => {
-        if (item) {
-          this.itemForm.patchValue(item);
-        }
-      });
+
+
+  ngOnInit(): void {
+    this.isEdit = history.state.isEdit;
+    this.itemsData = history.state.data;
+
+    if (this.itemsData) {
+      this.itemForm.patchValue(this.itemsData);
     }
+
+    // this is the initial value
+    const initialValue = JSON.stringify(this.itemForm.value);
+    console.log('initialValue: ', initialValue);
+    history.replaceState({ ...history.state, initialFormValue: initialValue }, '');
+
   }
 
   submit(): void {
     if (this.itemForm.valid) {
       const formData = this.itemForm.value;
 
-      if (this.isEdit && this.itemId) {
-        this.itemService.updateItem(this.itemId, formData).then(() => {
+      if (this.isEdit) {
+        this.itemService.updateItem(this.itemsData?.key, formData).then(() => {
           this.router.navigate(['/dashboard/items']);
         });
       } else {

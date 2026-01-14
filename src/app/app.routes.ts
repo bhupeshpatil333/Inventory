@@ -3,6 +3,9 @@ import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 import { authGuard } from './core/guard/auth.guard';
 import { loginGuard } from './core/guard/login.guard';
 import { DistrictComponent } from '../features/components/district/district.component';
+import { EcgConsumptionReportComponent } from '../features/components/ecg-consumption-report/ecg-consumption-report.component';
+import { EmployeeAttendenceComponent } from '../features/components/employee-attendence/employee-attendence/employee-attendence.component';
+import { WorkSettingsComponent } from '../features/components/work-settings/work-settings.component';
 
 export const routes: Routes = [
     {
@@ -29,7 +32,31 @@ export const routes: Routes = [
             {
                 path: 'items',
                 loadChildren: () => import('../features/components/items/items.routes').then(m => m.itemRoutes),
-            }
+            },
+            {
+                path: 'stockIn',
+                loadChildren: () => import('../features/components/stockIn/stockin.routes').then(m => m.stockInRoutes),
+            },
+            {
+                path: 'allocationHistory',
+                loadChildren: () => import('../features/components/allocation-history/allocation-history.routes').then(m => m.allocationRoutes),
+            },
+            {
+                path: 'stockReport',
+                loadChildren: () => import('../features/components/stock-report/stock-report.routes').then(m => m.stockReportRoutes),
+            },
+            {
+                path: 'ecg-report',
+                component: EcgConsumptionReportComponent
+            },
+            {
+                path: 'workSettings',
+                component: WorkSettingsComponent
+            },
+            {
+                path: 'emp-report/:id',
+                component: EmployeeAttendenceComponent
+            },
 
         ]
     },

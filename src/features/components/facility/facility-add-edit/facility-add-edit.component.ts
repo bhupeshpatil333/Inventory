@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MaterialModule } from '../../../../shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,22 +16,27 @@ import { DistrictService } from '../../../../shared/district.service';
 })
 export class FacilityAddEditComponent {
   facilityData!: any;
-
-
+  districtData: any[] = [];
+  isEdit: boolean = false;
   form!: FormGroup;
   facilityId: string | null = null;
   hide = true;
-  states: string[] = ['Maharashtra', 'Gujarat', 'Rajasthan']; // or fetch from API
+  states: string[] = ['Maharashtra', 'Gujarat', 'Rajasthan', 'Madhya Pradesh', 'Uttar Pradesh', 'Tamil Nadu', 'Kerala']; // or fetch from API
+  facilityType = [
+    // replace with ecg and x-ray type
+    { key: 'ecg', name: 'ECG' },
+    { key: 'x-ray', name: 'X-Ray' }
+  ];
 
   constructor(private fb: FormBuilder, private route: ActivatedRoute, private facilityService: FacilityService, private toast: ToastService, private districtService: DistrictService,
     private router: Router,) {
     this.form = this.fb.group({
       name: [''],
-      district: [''],
+      districtId: [''],
       block: [''],
       type: [''],
       latitude: [''],
-      longitude: [''],
+      longitude: ['', Validators.required],
       geoRadius: [''],
       employeeCode: [''],
       firstName: [''],
@@ -44,7 +49,8 @@ export class FacilityAddEditComponent {
       religion: [''],
       aadhaar: [''],
       address: [''],
-      empDistrict: [''],
+      district: [''],
+      email: [''],
       state: [''],
       pincode: [''],
       password: [''],
@@ -52,27 +58,37 @@ export class FacilityAddEditComponent {
 
     this.facilityData = history.state.data;
     console.log('this.facilityData: ', this.facilityData);
-    this.facilityId = this.facilityData?.key;
+    // this.facilityId = this.facilityData?.key;
+    this.isEdit = history.state.isEdit;
+
+
+    this.districtService.getDistrictData().then((data) => {
+      this.districtData = data;
+    })
+
 
     if (this.facilityData) {
       this.form.patchValue(this.facilityData);
     }
-
-    // this.route.paramMap.subscribe(params => {
-    //   this.facilityId = params.get('id');
-    //   if (this.facilityId) {
-    //     this.facilityService.getFacilitytById(this.facilityId).then((data) => {
-    //       if (data) {
-    //         this.form.patchValue(data);
-    //       }
-    //     });
-    //   }
-    // });
   }
 
+  onNumberInput(controlName: string) {
+    const value = +this.form.get(controlName)?.value;
+    if (value < 0) {
+      this.form.get(controlName)?.setValue(0);
+    }
+  }
+  preventMinus(event: KeyboardEvent) {
+    if (event.key === '-' || event.key === 'Minus') {
+      event.preventDefault();
+    }
+  }
+
+
+
   submit() {
-    if (this.facilityId) {
-      this.facilityService.updateFacility(this.facilityId, this.form.value);
+    if (this.isEdit) {
+      this.facilityService.updateFacility(this.facilityData?.key, this.form.value);
       this.toast.show('Updated Successfully.', ToastType.Success);
       this.router.navigate(['dashboard/facility']);
     } else {
@@ -81,5 +97,14 @@ export class FacilityAddEditComponent {
       this.router.navigate(['dashboard/facility']);
     }
   }
+
+  get combinedBlockType(): string {
+    const block = this.form.get('block')?.value;
+    const typeKey = this.form.get('type')?.value;
+    const typeName = this.facilityType.find(t => t.key === typeKey)?.name || '';
+    return block && typeName ? `${block} - ${typeName}` : '';
+  }
+
+
 
 }

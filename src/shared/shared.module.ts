@@ -41,6 +41,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { NgModule } from '@angular/core';
+import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 
 @NgModule({
     declarations: [],
@@ -80,7 +81,8 @@ import { NgModule } from '@angular/core';
         MatTooltipModule,
         MatPaginatorModule,
         MatSortModule,
-        MatTableModule
+        MatTableModule,
+        NgxDaterangepickerMd.forRoot()
     ],
     exports: [
         MatAutocompleteModule,
@@ -117,7 +119,8 @@ import { NgModule } from '@angular/core';
         MatTooltipModule,
         MatPaginatorModule,
         MatSortModule,
-        MatTableModule
+        MatTableModule,
+        NgxDaterangepickerMd
     ]
 })
 export class MaterialModule { }

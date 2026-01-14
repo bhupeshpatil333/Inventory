@@ -1,0 +1,106 @@
+<h2>Stock Allocation</h2>
+<form [formGroup]="allocationForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+    <div class="mb-3">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" formControlName="allocationType" value="district"
+                id="districtRadio">
+            <label class="form-check-label" for="districtRadio">District</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" formControlName="allocationType" value="facility"
+                id="facilityRadio">
+            <label class="form-check-label" for="facilityRadio">Facility</label>
+        </div>
+    </div>
+
+    <!-- <div *ngIf="allocationForm.get('allocationType')?.value === 'district'" class="mb-3">
+        <label for="districtSelect" class="form-label">District</label>
+        <mat-select class="form-select" formControlName="district" id="districtSelect">
+            <mat-option *ngFor="let d of districts" [value]="d.key">{{ d.name }}</mat-option>
+        </mat-select>
+    </div> -->
+    <div *ngIf="allocationForm.get('allocationType')?.value === 'district'" class="mb-3">
+        <label for="districtSelect" class="form-label">District</label>
+        <mat-form-field appearance="outline" class="w-100">
+            <input type="text" matInput [formControl]="districtCtrl" [matAutocomplete]="auto" id="districtSelect"
+                placeholder="Select district">
+
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayDistrictName">
+                <mat-option *ngFor="let district of filteredDistricts | async" [value]="district">
+                    {{ district?.name }}
+                </mat-option>
+            </mat-autocomplete>
+
+            <!-- Error message -->
+            <mat-error *ngIf="validateControl('districtId', districtCtrl) && hasControlError(districtCtrl, 'required')">
+                District selection is required
+            </mat-error>
+        </mat-form-field>
+
+
+    </div>
+
+
+    <div *ngIf="allocationForm.get('allocationType')?.value === 'facility'" class="mb-3">
+        <label for="facilitySelect" class="form-label">Facility</label>
+        <mat-form-field appearance="outline" class="w-100">
+            <input type="text" matInput [formControl]="facilityCtrl" [matAutocomplete]="facilityAuto"
+                id="facilitySelect" placeholder="Select facility">
+
+            <mat-autocomplete #facilityAuto="matAutocomplete" [displayWith]="displayFacilityName">
+                <mat-option *ngFor="let facility of filteredFacilities | async" [value]="facility">
+                    {{ facility?.name }}
+                </mat-option>
+            </mat-autocomplete>
+
+            <!-- Error message -->
+            <mat-error *ngIf="validateControl('facilityId', facilityCtrl) && hasControlError(facilityCtrl, 'required')">
+                Facility selection is required
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <div class="mb-3">
+        <label for="itemSelect" class="form-label">Item</label>
+        <mat-form-field appearance="outline" class="w-100">
+            <input type="text" matInput [formControl]="itemCtrl" [matAutocomplete]="itemAuto" id="itemSelect"
+                placeholder="Select item">
+
+            <mat-autocomplete #itemAuto="matAutocomplete" [displayWith]="displayItemName">
+                <mat-option *ngFor="let item of filteredItems | async" [value]="item">
+                    {{ item?.name }}
+                </mat-option>
+            </mat-autocomplete>
+
+            <!-- Error message -->
+            <mat-error *ngIf="validateControl('itemId', itemCtrl) && hasControlError(itemCtrl, 'required')">
+                Item selection is required
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <div class="mb-3 d-flex gap-3" *ngIf="allocationForm.get('item')?.value">
+        <label for="availableStock" class="form-label">Available Stock</label>
+        <div class="d-flex gap-3">
+            <!-- <p>5 </p> <span>Packet</span> -->
+            <p>{{ selectedAvailableStock }}</p>
+            <span>{{ selectedUnit }}</span>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="allocateQuantity" class="form-label">Allocate Quantity</label>
+        <input type="number" class="form-control" formControlName="allocateQuantity" id="allocateQuantity" required>
+        <div class="invalid-feedback" [class.d-block]="validateFormControl('allocateQuantity')">
+            <span *ngIf="hasError('allocateQuantity', 'required')">Allocate quantity is
+                required</span>
+            <span *ngIf="hasError('allocateQuantity', 'min')">Allocate quantity must be at least
+                1</span>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit"
+        [disabled]="allocationForm.invalid || (allocationForm.get('allocationType')?.value === 'district' && districtCtrl.invalid) || (allocationForm.get('allocationType')?.value === 'facility' && facilityCtrl.invalid) || itemCtrl.invalid">
+        Submit
+    </button>
+</form>

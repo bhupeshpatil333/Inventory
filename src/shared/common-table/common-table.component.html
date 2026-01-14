@@ -1,0 +1,71 @@
+<!-- Loading spinner -->
+<div class="flex justify-center items-center py-10" *ngIf="loading">
+    <mat-spinner diameter="40"></mat-spinner>
+</div>
+
+<!-- No records message -->
+<div class="text-center text-gray-500 py-6" *ngIf="!loading && (!data || data.length === 0)">
+    <b>No Records Found</b>
+</div>
+
+<!-- Table -->
+<table mat-table [dataSource]="data" class="w-full" *ngIf="!loading && data && data.length > 0">
+    <ng-container *ngFor="let col of columns" [matColumnDef]="col.key">
+        <!-- Header Cell -->
+        <th mat-header-cell *matHeaderCellDef>
+            <div class="flex items-center gap-2">
+                {{ col.header }}
+                <ng-container *ngIf="col.sortable">
+                    <div class="cursor-pointer" (click)="sortData(col.key)">
+                        <img *ngIf="getSortDirection(col.key) === ''" src="assets/sort_initial.png"
+                            class="sort-icon w-4 h-4">
+                        <img *ngIf="getSortDirection(col.key) === 'asc'" src="assets/sort_asc.png"
+                            class="sort-icon w-4 h-4">
+                        <img *ngIf="getSortDirection(col.key) === 'desc'" src="assets/sort_desc.png"
+                            class="sort-icon w-4 h-4">
+                    </div>
+                </ng-container>
+            </div>
+        </th>
+
+        <!-- Data Cell -->
+        <td mat-cell *matCellDef="let row">
+            <!-- Text Column -->
+            <ng-container *ngIf="col.type === 'text'">
+                {{ row[col.key] }}
+            </ng-container>
+
+            <!-- Date Column -->
+            <ng-container *ngIf="col.type === 'date'">
+                {{ getFormattedValue(row[col.key]) | date:'dd/MM/yyyy, h:mm a' }}
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container *ngIf="col.type === 'status'">
+                <mat-select [value]="row[col.key]" (selectionChange)="onStatusChange(row, $event.value)">
+                    <mat-option *ngFor="let option of col.statusOptions" [value]="option.value">
+                        {{ option.label }}
+                    </mat-option>
+                </mat-select>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container *ngIf="col.type === 'actions'">
+                <div class="flex gap-2">
+                    <button *ngIf="col.actions?.includes('edit')" mat-mini-fab color="primary" (click)="onEdit(row)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button *ngIf="col.actions?.includes('delete')" mat-mini-fab color="warn" (click)="onDelete(row)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <button *ngIf="col.actions?.includes('view')" mat-mini-fab color="accent" (click)="onView(row)">
+                        <mat-icon>visibility</mat-icon>
+                    </button>
+                </div>
+            </ng-container>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

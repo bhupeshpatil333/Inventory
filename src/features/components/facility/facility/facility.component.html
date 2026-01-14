@@ -8,11 +8,11 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-            <mat-label>District</mat-label>
+            <mat-label>Postal District</mat-label>
             <mat-select [(ngModel)]="selectedDistrict">
                 <mat-option value="">All</mat-option>
-                <mat-option *ngFor="let dist of uniqueDistricts" [value]="dist">
-                    {{ dist }}
+                <mat-option *ngFor="let dist of districts" [value]="dist.key">
+                    {{ dist.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -38,7 +38,7 @@
 
         <ng-container matColumnDef="admin">
             <th mat-header-cell *matHeaderCellDef>Admin</th>
-            <td mat-cell *matCellDef="let row">{{ row.adminName }}</td>
+            <td mat-cell *matCellDef="let row">{{ row.firstName }} {{ row.lastName }}</td>
         </ng-container>
 
         <ng-container matColumnDef="action">

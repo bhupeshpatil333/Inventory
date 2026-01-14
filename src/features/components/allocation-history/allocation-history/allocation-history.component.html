@@ -1,0 +1,35 @@
+<div class="allocation-history">
+    <h2>Allocation History</h2>
+
+    <div class="search-filters">
+        <mat-form-field appearance="outline">
+            <mat-label>Search</mat-label>
+            <input matInput [(ngModel)]="searchText" placeholder="Search...">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>District</mat-label>
+            <mat-select [(ngModel)]="selectedDistrict">
+                <mat-option value="">All</mat-option>
+                <mat-option *ngFor="let item of districts" [value]="item.key">{{item.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Facility</mat-label>
+            <mat-select [(ngModel)]="selectedFacility">
+                <mat-option value="">All</mat-option>
+                <mat-option *ngFor="let item of facilities" [value]="item.key">{{item.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <button mat-raised-button color="primary" routerLink="/dashboard/allocationHistory/add">Add Allocation</button>
+
+    <app-common-table [columns]="columns" [data]="filteredData" [loading]="loading" (edit)="edit($event)"
+        (delete)="deleteAllocation($event.key)">
+    </app-common-table>
+
+
+
+</div>

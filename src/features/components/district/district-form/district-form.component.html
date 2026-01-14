@@ -1,9 +1,9 @@
 <form [formGroup]="form" (ngSubmit)="submit()" class="p-4 space-y-4">
   <mat-form-field appearance="outline" class="w-full">
     <mat-label>District</mat-label>
-    <input matInput formControlName="district" />
-    <mat-error *ngIf="form.get('district')?.hasError('required')">District is required</mat-error>
-    <mat-error *ngIf="form.get('district')?.hasError('pattern')">Invalid district name</mat-error>
+    <input matInput formControlName="name" />
+    <mat-error *ngIf="form.get('name')?.hasError('required')">District is required</mat-error>
+    <mat-error *ngIf="form.get('name')?.hasError('pattern')">Invalid district name</mat-error>
 
   </mat-form-field>
 
@@ -28,14 +28,14 @@
     <input matInput formControlName="email" />
     <mat-error *ngIf="form.get('email')?.hasError('required')">Email is required</mat-error>
     <mat-error *ngIf="form.get('email')?.hasError('email')">Invalid email address</mat-error>
-
+    <mat-error *ngIf="form.get('email')?.hasError('emailExists')">This email is already registered</mat-error>
   </mat-form-field>
-  <mat-form-field appearance="outline" class="w-full">
+  <!-- changes -->
+  <mat-form-field appearance="outline" class="w-full" *ngIf="!id">
     <mat-label>Password</mat-label>
-    <input matInput formControlName="password" />
+    <input matInput formControlName="password" type="password" />
     <mat-error *ngIf="form.get('password')?.hasError('required')">Password is required</mat-error>
     <mat-error *ngIf="form.get('password')?.hasError('pattern')">Invalid password</mat-error>
-
   </mat-form-field>
 
   <button mat-flat-button color="primary" type="submit">Save</button>

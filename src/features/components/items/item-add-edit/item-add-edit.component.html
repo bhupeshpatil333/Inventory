@@ -1,25 +1,33 @@
 <div class="container">
     <h2>{{ isEdit ? 'Edit Item' : 'Add Item' }}</h2>
 
-    <form [formGroup]="itemForm" (ngSubmit)="submit()">
+    <form [formGroup]="itemForm" (ngSubmit)="submit()" class="d-flex flex-column">
         <mat-form-field appearance="fill" class="full-width">
             <mat-label>Name</mat-label>
             <input matInput formControlName="name">
         </mat-form-field>
-        ś
+
         <mat-form-field appearance="fill" class="full-width">
             <mat-label>Brand</mat-label>
             <input matInput formControlName="brand">
         </mat-form-field>
 
-        <mat-form-field appearance="fill" class="full-width">
+        <!-- <mat-form-field appearance="fill" class="full-width">
             <mat-label>Unit</mat-label>
             <input matInput formControlName="unit">
+        </mat-form-field> -->
+
+        <!-- Quantity Unit -->
+        <mat-form-field appearance="fill">
+            <mat-label>Quantity Unit</mat-label>
+            <mat-select formControlName="unit">
+                <mat-option *ngFor="let qUnit of quantityUnits" [value]="qUnit">{{ qUnit }}</mat-option>
+            </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="full-width">
             <mat-label>Contains Per Unit</mat-label>
-            <input matInput formControlName="containsPerUnit">
+            <input matInput formControlName="containsPerUnit" placeholder="e.g. 100 Pieces, 5 Litre">
         </mat-form-field>
 
         <button mat-raised-button color="primary" type="submit">

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MaterialModule } from '../../../../shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -15,8 +15,22 @@ import { ConfirmationDialogComponent } from '../../../../shared/confirmDialog/co
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
+  email: any;
+
   constructor(private dialog: MatDialog, private authService: AuthService) { }
+
+  async ngOnInit(): Promise<void> {
+    try {
+      const claims = await this.authService.getUserClaims();
+      console.log("claims", claims);
+
+      this.email = claims?.['email'] || null; // ✅ extract email
+      console.log("Email:", this.email);
+    } catch (err) {
+      console.error("Error getting claims:", err);
+    }
+  }
 
 
   logout() {
@@ -24,7 +38,11 @@ export class SidebarComponent {
       width: '300px',
       data: {
         title: 'Logout',
-        message: 'Are you sure you want to logout?'
+        message: 'Are you sure you want to logout?',
+        buttons: [
+          { text: 'Cancel', value: false, class: 'btn-gray' },
+          { text: 'Logout', value: true, class: 'btn-red' }
+        ]
       }
     });
 
@@ -34,4 +52,5 @@ export class SidebarComponent {
       }
     });
   }
+
 }

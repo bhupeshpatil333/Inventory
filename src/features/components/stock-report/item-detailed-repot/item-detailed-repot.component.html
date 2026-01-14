@@ -1,0 +1,73 @@
+<div class="container mt-3">
+    <h2>Item Detailed Report</h2>
+
+    <div class="flex items-center gap-4 my-4">
+        <!-- <mat-form-field appearance="outline">
+            <mat-label>From Date</mat-label>
+            <input matInput [matDatepicker]="picker1" [(ngModel)]="fromDate" />
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>To Date</mat-label>
+            <input matInput [matDatepicker]="picker2" [(ngModel)]="toDate" />
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field> -->
+        <!-- <app-common-date-range-piker [(fromDate)]="fromDate" [(toDate)]="toDate" [dateFilter]="dateFilterFn">
+        </app-common-date-range-piker> -->
+        <app-common-date-range-piker [(fromDate)]="fromDate" [(toDate)]="toDate">
+        </app-common-date-range-piker>
+
+
+    </div>
+
+
+
+    <table class="table table-bordered mt-3">
+        <thead class="table-light">
+            <tr>
+                <th (click)="sortData('date')">
+                    Date
+
+                    <img *ngIf="getSortDirection('date') === ''"
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNTU2Z8O9KksXt0lO2AFMWNxxEHu3-yGnc0Q&s"
+                        class="sort-icon">
+                    <img *ngIf="getSortDirection('date') === 'asc'"
+                        src="https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/c6/sort-ascending-zwkqgtah0x8a9l4xilhz6s.png/sort-ascending-g3f9ppc9kfek7e3e1l37p.png?_a=DATAg1AAZAA0"
+                        class="sort-icon">
+                    <img *ngIf="getSortDirection('date') === 'desc'"
+                        src="https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/c6/sort-ascending-zwkqgtah0x8a9l4xilhz6s.png/sort-ascending-g3f9ppc9kfek7e3e1l37p.png?_a=DATAg1AAZAA0"
+                        class="sort-icon">
+                </th>
+                <th>Source</th>
+                <th>Destination</th>
+                <th>Type</th>
+                <th>Brand</th>
+                <th>Quantity</th>
+                <th>Stock Available (Source)</th>
+                <th>Stock Available (Destination)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let report of filteredData">
+                <td>
+                    <ng-container *ngIf="report.date && report.date !== 'N/A'; else notAvailable">
+                        {{ report.date | date:'dd/MM/yyyy' }}
+                    </ng-container>
+                    <ng-template #notAvailable>N/A</ng-template>
+                </td>
+                <td>{{ report.source }}</td>
+                <td>{{ report.destination }}</td>
+                <td>{{ report.type }}</td>
+                <td>{{ report.brand }}</td>
+                <td>{{ report.quantity }}</td>
+                <td>{{ report.stockSource }}</td>
+                <td>{{ report.stockDestination }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+</div>

@@ -1,0 +1,26 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.year-dropdown {
+  align-self: flex-end;
+//   margin-bottom: 1rem;
+  width: 180px;
+}
+
+.custom-table {
+  width: 100%;
+}
+
+.header-cell {
+  background-color: #1f3b5c;
+  color: white;
+  font-weight: bold;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}

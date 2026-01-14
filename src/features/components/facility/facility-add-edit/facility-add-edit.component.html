@@ -1,15 +1,17 @@
 <form [formGroup]="form" (ngSubmit)="submit()" class="p-4">
-
     <h2>Facility Details</h2>
-
     <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>Facility Name</mat-label>
         <input matInput formControlName="name" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-full mb-2">
-        <mat-label>District</mat-label>
-        <input matInput formControlName="district" />
+        <mat-label>Posting District</mat-label>
+        <mat-select formControlName="districtId">
+            <mat-option *ngFor="let district of districtData" [value]="district.key">
+                {{ district.name }}
+            </mat-option>
+        </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-full mb-2">
@@ -20,25 +22,39 @@
     <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>Type</mat-label>
         <mat-select formControlName="type">
-            <mat-option value="Hospital">Hospital</mat-option>
-            <mat-option value="Clinic">Clinic</mat-option>
+            <mat-option *ngFor="let type of facilityType" [value]="type.key">
+                {{ type.name }}
+            </mat-option>
         </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Block + Type</mat-label>
+        <mat-select [value]="combinedBlockType">
+            <mat-option [value]="combinedBlockType">{{ combinedBlockType }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+
+
+    <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>Latitude</mat-label>
-        <input matInput formControlName="latitude" />
+        <input matInput formControlName="latitude" type="number" (input)="onNumberInput('latitude')"
+            (keydown)="preventMinus($event)" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>Longitude</mat-label>
-        <input matInput formControlName="longitude" />
+        <input matInput formControlName="longitude" type="number" (input)="onNumberInput('longitude')"
+            (keydown)="preventMinus($event)" />
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="w-full mb-4">
+    <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>Geo Fencing Radius</mat-label>
-        <input matInput formControlName="geoRadius" />
+        <input matInput formControlName="geoRadius" type="number" (input)="onNumberInput('geoRadius')"
+            (keydown)="preventMinus($event)" />
     </mat-form-field>
+
 
     <h2 class="mt-6">Employee Demographic Details</h2>
 
@@ -50,6 +66,11 @@
     <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>First Name</mat-label>
         <input matInput formControlName="firstName" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full mb-2">
+        <mat-label>Email</mat-label>
+        <input type="email" matInput formControlName="email" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-full mb-2">
@@ -103,7 +124,7 @@
 
     <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>District</mat-label>
-        <input matInput formControlName="empDistrict" />
+        <input matInput formControlName="district" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-full mb-2">
@@ -125,6 +146,5 @@
             <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
     </mat-form-field>
-
     <button mat-raised-button color="primary" type="submit">Submit</button>
 </form>

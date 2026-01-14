@@ -1,0 +1,53 @@
+<div class="flex justify-between items-center mb-4">
+    <mat-form-field appearance="outline">
+        <mat-label>Search</mat-label>
+        <input matInput [(ngModel)]="searchText" placeholder="Search districts" />
+    </mat-form-field>
+    <button mat-flat-button color="primary" (click)="add()">
+        + Add Stocks
+    </button>
+</div>
+
+<table mat-table [dataSource]="filteredStocks">
+    <!-- Date -->
+    <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let stock">{{ stock }}</td>
+    </ng-container>
+
+    <!-- Item -->
+    <ng-container matColumnDef="itemName">
+        <th mat-header-cell *matHeaderCellDef>Item</th>
+        <td mat-cell *matCellDef="let stock">{{ stock.item }}</td>
+    </ng-container>
+
+    <!-- Brand -->
+    <ng-container matColumnDef="brand">
+        <th mat-header-cell *matHeaderCellDef>Brand</th>
+        <td mat-cell *matCellDef="let stock">{{ stock.brand }}</td>
+    </ng-container>
+
+    <!-- Unit -->
+    <ng-container matColumnDef="unit">
+        <th mat-header-cell *matHeaderCellDef>Unit</th>
+        <td mat-cell *matCellDef="let stock"> 1 {{ stock.unit }} = {{ getUnitConversion(stock) }}</td>
+    </ng-container>
+
+    <!-- Quantity -->
+    <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef>Qty</th>
+        <td mat-cell *matCellDef="let stock">{{ stock.quantity }}</td>
+    </ng-container>
+
+    <!-- Action -->
+    <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td mat-cell *matCellDef="let stock">
+            <button mat-button (click)="editStock(stock)">Edit</button>
+            <button mat-button (click)="deleteSTock(stock.key)">Delete</button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { DistrictService } from '../../../../shared/district.service';
 import { FacilityService } from '../../facility/facility.service';
 import { ItemService } from '../service/item.service';
+import { CommonService } from '../../../../shared/services/common.service';
 
 @Component({
   selector: 'app-item',
@@ -15,43 +16,53 @@ import { ItemService } from '../service/item.service';
   styleUrl: './item.component.scss'
 })
 export class ItemComponent implements OnInit {
-  constructor(private facilityService: FacilityService, private itemService: ItemService, private fb: FormBuilder, private router: Router, private dialog: MatDialog) { }
+  constructor(private facilityService: FacilityService, private itemService: ItemService, private fb: FormBuilder, private router: Router, private dialog: MatDialog, private commonService: CommonService) { }
   searchText = '';
   selectedType = '';
-  typeArray: any[] = [];
+  facilityTypes: any[] = [];
   items: any = [/* your data */];
   facilities: any = [/* your data */];
   displayedColumns: string[] = ['name', 'brand', 'type', 'unit', 'actions'];
 
-  ngOnInit(): void {
-    this.facilityService.getFacilitytData().then((facility) => {
-      this.facilities = facility;
+  async ngOnInit(): Promise<void> {
+    try {
+      this.facilities = await this.facilityService.getFacilitytData();
+      console.log('this.facilities: ', this.facilities);
+      // ✅ Extract unique types from facility list
+      this.facilityTypes = [...new Set(this.facilities.map((f: any) => f.type))];
 
-      this.itemService.getItemData().then((item) => {
-        this.items = item.map(itm => {
-          const matchedFacility = this.facilities.find((f: any) => f.type === itm.type);
-          return {
-            ...itm,
-            type: matchedFacility?.type || 'NA'
-          };
-        });
-        // ✅ Extract and store unique types
-        const types = this.items.map((i: any) => i.type).filter((t: any) => !!t); // remove null/undefined
-        this.typeArray = [...new Set(types)];
+      this.items = await this.itemService.getItemData();
+      console.log('selected type: ', this.selectedType)
 
-        console.log('Unique Types:', this.typeArray);
-      })
-    })
+    } catch (error) {
+      console.error('Error loading data:', error);
+    }
   }
+
+  getUnitConversion(stock: any): string {
+    switch (stock.unit) {
+      case 'Packet':
+        return `${stock.containsPerUnit} Pieces`;
+      case 'Litre':
+        return `${stock.containsPerUnit} ml`;
+      case 'Kg':
+        return `${stock.containsPerUnit} g`;
+      case 'Tablet':
+      case 'Pieces':
+        return '-'; // no conversion
+      default:
+        return stock.containsPerUnit;
+    }
+  }
+
 
   get filteredItems() {
     const search = (this.searchText || '').toLowerCase();
-
     return this.items.filter((item: any) => {
       const matchesSearch =
         (item?.name || '').toLowerCase().includes(search) ||
-        (item?.brand || '').toLowerCase().includes(search);
-
+        (item?.brand || '').toLowerCase().includes(search) ||
+        (item?.type || '').toLowerCase().includes(search);
       const matchesType =
         !this.selectedType || (item?.type || '').toLowerCase() === this.selectedType.toLowerCase();
 
@@ -66,12 +77,13 @@ export class ItemComponent implements OnInit {
 
   editItem(item: any) {
     if (item) {
-      this.router.navigate(['dashboard/items/edit', item]);
+      this.router.navigate(['dashboard/items/edit', item.key], { state: { data: item, isEdit: true } });
     }
   }
 
   deleteItem(item: any) {
     // Add confirmation or service call here
+    this.commonService.delete('items', item.id);
     console.log('Delete item:', item);
   }
 }

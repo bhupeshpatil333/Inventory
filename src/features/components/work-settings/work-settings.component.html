@@ -1,0 +1,37 @@
+<div class="container">
+    <!-- Year Dropdown -->
+    <mat-form-field appearance="outline" class="year-dropdown">
+        <mat-label>Select Year</mat-label>
+        <mat-select [(ngModel)]="selectedYear" (selectionChange)="onYearSelection($event)">
+            <mat-option [value]="'add-new'">+ Add New Year</mat-option>
+            <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <!-- Table -->
+    <form [formGroup]="form">
+        <table mat-table formArrayName="monthsArray" [dataSource]="dataSource" class="mat-elevation-z1 custom-table">
+            <!-- Month Column -->
+            <ng-container matColumnDef="month">
+                <th mat-header-cell *matHeaderCellDef>Month</th>
+                <td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+                    {{ monthsArray.at(i).get('month')?.value }}
+                </td>
+            </ng-container>
+            <!-- Working Days Column -->
+            <ng-container matColumnDef="workingDays">
+                <th mat-header-cell *matHeaderCellDef>Working Days</th>
+                <td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+                    <input matInput type="number" formControlName="workingDays">
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="['month', 'workingDays']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['month', 'workingDays'];"></tr>
+        </table>
+    </form>
+    <!-- Buttons -->
+    <div class="button-group">
+        <button mat-raised-button color="primary" (click)="save()">
+            {{ isEditMode ? 'Update' : 'Save' }}
+        </button>
+    </div>
+</div>
